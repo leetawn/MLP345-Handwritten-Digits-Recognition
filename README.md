@@ -1,9 +1,6 @@
 # OptDigits MLP Handwritten Digit Classifier
 
 A modular C# implementation of a 3-layer Multilayer Perceptron (MLP) trained with backpropagation (stochastic gradient descent) to recognize handwritten digits from the UCI Optical Recognition of Handwritten Digits dataset.
-
-Built with clean architecture, zero machine learning framework dependencies, and deterministic reproducibility.
-
 ---
 
 ## Table of Contents
