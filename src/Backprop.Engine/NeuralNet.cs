@@ -138,6 +138,22 @@ namespace Backprop
             this.calculateOA();
             //application phase
         }
+        public int Predict()
+        {
+            this.run();
+            int bestIndex = 0;
+            double maxActivation = oneuron[0].getOActivation();
+            for (int i = 1; i < oneuron.Length; i++)
+            {
+                double act = oneuron[i].getOActivation();
+                if (act > maxActivation)
+                {
+                    maxActivation = act;
+                    bestIndex = i;
+                }
+            }
+            return bestIndex;
+        }
         public bool countgood()
         {
             // session terminator
