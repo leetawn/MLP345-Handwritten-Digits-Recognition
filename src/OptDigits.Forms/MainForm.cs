@@ -124,8 +124,8 @@ public sealed class MainForm : Form
         var btnMenu = new Button
         {
             Text = "← Main Menu",
-            Location = new Point(176, 372),
-            Size = new Size(114, 34),
+            Location = new Point(174, 370),
+            Size = new Size(120, 36),
             UseVisualStyleBackColor = true
         };
         btnMenu.Click += (_, _) => Close();
@@ -351,7 +351,7 @@ public sealed class DigitBarControl : UserControl
 
         // Track region
         const int labelW = 58;
-        const int pctW   = 44;
+        const int pctW   = 50;
         int trackX = labelW;
         int trackW = Width - labelW - pctW - 2;
         int trackY = (Height - 12) / 2;

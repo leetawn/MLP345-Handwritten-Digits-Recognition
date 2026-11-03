@@ -41,7 +41,7 @@ public sealed class MenuForm : Form
     public MenuForm()
     {
         Text = "OptDigits MLP - Main Menu";
-        ClientSize = new Size(820, 580);
+        ClientSize = new Size(820, 590);
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
@@ -54,7 +54,7 @@ public sealed class MenuForm : Form
             Text = "Ethan Benedict Labajo, BSCS - 3 F1\nHelge Justine Dano, BSCS - 3 F1",
             Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
             ForeColor = Color.FromArgb(30, 30, 30),
-            Location = new Point(20, 12),
+            Location = new Point(20, 10),
             AutoSize = true
         };
         Controls.Add(lblAuthors);
@@ -66,8 +66,8 @@ public sealed class MenuForm : Form
             Font = new Font("Segoe UI", 9.5f),
             ForeColor = Color.FromArgb(90, 90, 90),
             TextAlign = ContentAlignment.TopRight,
-            Location = new Point(560, 12),
-            Size = new Size(240, 36)
+            Location = new Point(530, 10),
+            Size = new Size(270, 42)
         };
         Controls.Add(lblProjectTitle);
 
@@ -75,14 +75,14 @@ public sealed class MenuForm : Form
         var grpPretrained = new GroupBox
         {
             Text = " Pre-Trained Model ",
-            Location = new Point(20, 56),
-            Size = new Size(780, 84)
+            Location = new Point(20, 54),
+            Size = new Size(780, 86)
         };
 
         _lblPretrainedStatus = new Label
         {
             Location = new Point(16, 22),
-            Size = new Size(748, 18),
+            Size = new Size(748, 22),
             Font = new Font("Segoe UI", 9f)
         };
         grpPretrained.Controls.Add(_lblPretrainedStatus);
@@ -90,7 +90,7 @@ public sealed class MenuForm : Form
         _btnLaunchPretrained = new Button
         {
             Text = "Open Drawing Canvas",
-            Location = new Point(16, 44),
+            Location = new Point(16, 46),
             Size = new Size(210, 30),
             Font = new Font("Segoe UI", 9f, FontStyle.Bold),
             UseVisualStyleBackColor = true
@@ -104,39 +104,39 @@ public sealed class MenuForm : Form
         var grpTrain = new GroupBox
         {
             Text = " Train Model ",
-            Location = new Point(20, 148),
-            Size = new Size(780, 418)
+            Location = new Point(20, 146),
+            Size = new Size(780, 428)
         };
 
-        int lblX = 16, numX = 140, y = 26, yStep = 30;
+        int lblX = 16, numX = 156, y = 26, yStep = 30;
 
         // Epochs
         grpTrain.Controls.Add(new Label { Text = "Epochs:", Location = new Point(lblX, y + 2), AutoSize = true });
-        _numEpochs = new NumericUpDown { Location = new Point(numX, y), Size = new Size(95, 23), Minimum = 1, Maximum = 200, Value = 50 };
+        _numEpochs = new NumericUpDown { Location = new Point(numX, y), Size = new Size(90, 23), Minimum = 1, Maximum = 200, Value = 50 };
         grpTrain.Controls.Add(_numEpochs);
         y += yStep;
 
         // Hidden units
         grpTrain.Controls.Add(new Label { Text = "Hidden Units:", Location = new Point(lblX, y + 2), AutoSize = true });
-        _numHidden = new NumericUpDown { Location = new Point(numX, y), Size = new Size(95, 23), Minimum = 8, Maximum = 128, Value = 32 };
+        _numHidden = new NumericUpDown { Location = new Point(numX, y), Size = new Size(90, 23), Minimum = 8, Maximum = 128, Value = 32 };
         grpTrain.Controls.Add(_numHidden);
         y += yStep;
 
         // Output LR
         grpTrain.Controls.Add(new Label { Text = "Output LR (η_out):", Location = new Point(lblX, y + 2), AutoSize = true });
-        _numLrOut = new NumericUpDown { Location = new Point(numX, y), Size = new Size(95, 23), DecimalPlaces = 3, Increment = 0.05M, Minimum = 0.001M, Maximum = 2.0M, Value = 0.500M };
+        _numLrOut = new NumericUpDown { Location = new Point(numX, y), Size = new Size(90, 23), DecimalPlaces = 3, Increment = 0.05M, Minimum = 0.001M, Maximum = 2.0M, Value = 0.500M };
         grpTrain.Controls.Add(_numLrOut);
         y += yStep;
 
         // Input LR
         grpTrain.Controls.Add(new Label { Text = "Input LR (η_in):", Location = new Point(lblX, y + 2), AutoSize = true });
-        _numLrIn = new NumericUpDown { Location = new Point(numX, y), Size = new Size(95, 23), DecimalPlaces = 3, Increment = 0.025M, Minimum = 0.001M, Maximum = 2.0M, Value = 0.375M };
+        _numLrIn = new NumericUpDown { Location = new Point(numX, y), Size = new Size(90, 23), DecimalPlaces = 3, Increment = 0.025M, Minimum = 0.001M, Maximum = 2.0M, Value = 0.375M };
         grpTrain.Controls.Add(_numLrIn);
         y += yStep;
 
         // Seed
         grpTrain.Controls.Add(new Label { Text = "Random Seed:", Location = new Point(lblX, y + 2), AutoSize = true });
-        _numSeed = new NumericUpDown { Location = new Point(numX, y), Size = new Size(95, 23), Minimum = 1, Maximum = 999999, Value = 42 };
+        _numSeed = new NumericUpDown { Location = new Point(numX, y), Size = new Size(90, 23), Minimum = 1, Maximum = 999999, Value = 42 };
         grpTrain.Controls.Add(_numSeed);
         y += 34;
 
@@ -145,7 +145,7 @@ public sealed class MenuForm : Form
         {
             Text = "▶ Train Model",
             Location = new Point(lblX, y),
-            Size = new Size(219, 32),
+            Size = new Size(230, 32),
             Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
             UseVisualStyleBackColor = true
         };
@@ -157,7 +157,7 @@ public sealed class MenuForm : Form
         {
             Text = "Reset Defaults",
             Location = new Point(lblX, y),
-            Size = new Size(219, 25),
+            Size = new Size(230, 26),
             UseVisualStyleBackColor = true
         };
         _btnResetDefaults.Click += (_, _) => ResetToDefaults();
@@ -166,9 +166,9 @@ public sealed class MenuForm : Form
 
         _btnLaunchTrained = new Button
         {
-            Text = "Open Canvas with Trained Model",
+            Text = "Open Canvas (Trained Model)",
             Location = new Point(lblX, y),
-            Size = new Size(219, 34),
+            Size = new Size(230, 34),
             Font = new Font("Segoe UI", 9f, FontStyle.Bold),
             Enabled = false,
             UseVisualStyleBackColor = true
@@ -179,8 +179,8 @@ public sealed class MenuForm : Form
         // Right Panel: Progress and Log
         _prgTraining = new ProgressBar
         {
-            Location = new Point(255, 24),
-            Size = new Size(508, 18),
+            Location = new Point(262, 24),
+            Size = new Size(502, 20),
             Minimum = 0,
             Maximum = 50,
             Value = 0
@@ -190,17 +190,17 @@ public sealed class MenuForm : Form
         _lblTrainingStatus = new Label
         {
             Text = "Ready to train.",
-            Location = new Point(255, 46),
-            Size = new Size(508, 18),
-            Font = new Font("Segoe UI", 8.5f),
+            Location = new Point(262, 48),
+            Size = new Size(502, 22),
+            Font = new Font("Segoe UI", 9f),
             ForeColor = Color.FromArgb(70, 70, 70)
         };
         grpTrain.Controls.Add(_lblTrainingStatus);
 
         _txtLog = new TextBox
         {
-            Location = new Point(255, 68),
-            Size = new Size(508, 336),
+            Location = new Point(262, 74),
+            Size = new Size(502, 338),
             Multiline = true,
             ReadOnly = true,
             ScrollBars = ScrollBars.Vertical,
