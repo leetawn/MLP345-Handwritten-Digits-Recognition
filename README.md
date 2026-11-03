@@ -153,8 +153,8 @@ Complete sweep logs and analysis are tracked in [docs/experiments.md](docs/exper
 
 | Configuration | LrOut | LrIn | Hidden Size | Epochs | Val Accuracy (%) | Final Val Loss |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Best Configuration** | *TBD* | *TBD* | *TBD* | *TBD* | *TBD* | *TBD* |
-| **Baseline Configuration** | 0.20 | 0.15 | 32 | 50 | *TBD* | *TBD* |
+| **Best Configuration** | 0.50 | 0.375 | 32 | 50 | 98.82% | 0.002890 |
+| **Baseline Configuration** | 0.20 | 0.150 | 32 | 50 | 98.43% | 0.003364 |
 
 ---
 
@@ -163,12 +163,12 @@ Held-out test set performance (`data/raw/optdigits.tes`):
 
 | Metric | Score |
 | :--- | :---: |
-| **Overall Test Accuracy** | *TBD* |
-| **Average Precision** | *TBD* |
-| **Average Recall** | *TBD* |
-| **Macro F1-Score** | *TBD* |
+| **Overall Test Accuracy** | 95.99% (1,725 / 1,797) |
+| **Average Precision** | 96.16% (0.9616) |
+| **Average Recall** | 95.98% (0.9598) |
+| **Macro F1-Score** | 96.00% (0.9600) |
 
-*(Results will be populated after Partner A and Partner B complete stub implementations and execute the training pipeline).*
+*(Evaluated on 1,797 test instances with 32 hidden units, 50 epochs, and tuned learning rates).*
 
 ---
 
