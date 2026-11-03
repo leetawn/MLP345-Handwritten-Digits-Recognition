@@ -32,7 +32,6 @@ This project classifies $8 \times 8$ downsampled bitmaps of handwritten digits (
 - **Instances**: 5,620 total (3,823 training in `optdigits.tra`, 1,797 test in `optdigits.tes`).
 - **Features**: 64 integer attributes in range $[0, 16]$, representing counts of black pixels in $4 \times 4$ blocks of $32 \times 32$ handwritten bitmaps.
 - **Classes**: 10 classes (`0` to `9`).
-- **License**: Creative Commons Attribution 4.0 International (CC BY 4.0).
 - For complete details, see [docs/data-description.md](docs/data-description.md).
 
 ---
