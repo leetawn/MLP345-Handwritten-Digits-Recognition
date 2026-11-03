@@ -41,53 +41,57 @@ public sealed class MenuForm : Form
     public MenuForm()
     {
         Text = "OptDigits MLP - Main Menu";
-        ClientSize = new Size(820, 620);
+        ClientSize = new Size(820, 580);
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
         Font = new Font("Segoe UI", 9f);
 
-        // ── HEADER ────────────────────────────────────────────────────────────
-        var lblTitle = new Label
+        // ── TOP HEADER ────────────────────────────────────────────────────────
+        // Student / Team Information (Top Left)
+        var lblAuthors = new Label
         {
-            Text = "OptDigits MLP Handwritten Digit Classifier",
-            Font = new Font("Segoe UI", 14f, FontStyle.Bold),
-            Location = new Point(20, 14),
+            Text = "Ethan Benedict Labajo, BSCS - 3 F1\nHelge Justine Dano, BSCS - 3 F1",
+            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(30, 30, 30),
+            Location = new Point(20, 12),
             AutoSize = true
         };
-        Controls.Add(lblTitle);
+        Controls.Add(lblAuthors);
 
-        var lblSubtitle = new Label
+        // Project Title (Top Right)
+        var lblProjectTitle = new Label
         {
-            Text = "3-layer neural network with online backpropagation on UCI 8x8 handwritten digit features.",
-            Font = new Font("Segoe UI", 9f),
-            ForeColor = Color.FromArgb(80, 80, 80),
-            Location = new Point(22, 42),
-            AutoSize = true
+            Text = "OptDigits MLP Classifier\nHandwritten Digits Recognition",
+            Font = new Font("Segoe UI", 9.5f),
+            ForeColor = Color.FromArgb(90, 90, 90),
+            TextAlign = ContentAlignment.TopRight,
+            Location = new Point(560, 12),
+            Size = new Size(240, 36)
         };
-        Controls.Add(lblSubtitle);
+        Controls.Add(lblProjectTitle);
 
-        // ── OPTION 1: PRE-TRAINED MODEL ───────────────────────────────────────
+        // ── SECTION 1: PRE-TRAINED MODEL ──────────────────────────────────────
         var grpPretrained = new GroupBox
         {
-            Text = " Option 1: Use Pre-Trained Model ",
-            Location = new Point(20, 68),
-            Size = new Size(780, 92)
+            Text = " Pre-Trained Model ",
+            Location = new Point(20, 56),
+            Size = new Size(780, 84)
         };
 
         _lblPretrainedStatus = new Label
         {
-            Location = new Point(16, 26),
-            Size = new Size(748, 20),
+            Location = new Point(16, 22),
+            Size = new Size(748, 18),
             Font = new Font("Segoe UI", 9f)
         };
         grpPretrained.Controls.Add(_lblPretrainedStatus);
 
         _btnLaunchPretrained = new Button
         {
-            Text = "Launch Drawing Canvas (Pre-Trained)",
-            Location = new Point(16, 48),
-            Size = new Size(260, 32),
+            Text = "Open Drawing Canvas",
+            Location = new Point(16, 44),
+            Size = new Size(210, 30),
             Font = new Font("Segoe UI", 9f, FontStyle.Bold),
             UseVisualStyleBackColor = true
         };
@@ -96,25 +100,15 @@ public sealed class MenuForm : Form
 
         Controls.Add(grpPretrained);
 
-        // ── OPTION 2: TRAIN CUSTOM MODEL ──────────────────────────────────────
+        // ── SECTION 2: TRAIN CUSTOM MODEL ─────────────────────────────────────
         var grpTrain = new GroupBox
         {
-            Text = " Option 2: Train Model & Live Epoch Metrics ",
-            Location = new Point(20, 168),
-            Size = new Size(780, 436)
+            Text = " Train Model ",
+            Location = new Point(20, 148),
+            Size = new Size(780, 418)
         };
 
-        // Left Panel: Hyperparameter Controls
-        var lblHpHeader = new Label
-        {
-            Text = "Hyperparameters",
-            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-            Location = new Point(16, 24),
-            AutoSize = true
-        };
-        grpTrain.Controls.Add(lblHpHeader);
-
-        int lblX = 16, numX = 145, y = 52, yStep = 30;
+        int lblX = 16, numX = 140, y = 26, yStep = 30;
 
         // Epochs
         grpTrain.Controls.Add(new Label { Text = "Epochs:", Location = new Point(lblX, y + 2), AutoSize = true });
@@ -123,7 +117,7 @@ public sealed class MenuForm : Form
         y += yStep;
 
         // Hidden units
-        grpTrain.Controls.Add(new Label { Text = "Hidden Neurons:", Location = new Point(lblX, y + 2), AutoSize = true });
+        grpTrain.Controls.Add(new Label { Text = "Hidden Units:", Location = new Point(lblX, y + 2), AutoSize = true });
         _numHidden = new NumericUpDown { Location = new Point(numX, y), Size = new Size(95, 23), Minimum = 8, Maximum = 128, Value = 32 };
         grpTrain.Controls.Add(_numHidden);
         y += yStep;
@@ -144,37 +138,37 @@ public sealed class MenuForm : Form
         grpTrain.Controls.Add(new Label { Text = "Random Seed:", Location = new Point(lblX, y + 2), AutoSize = true });
         _numSeed = new NumericUpDown { Location = new Point(numX, y), Size = new Size(95, 23), Minimum = 1, Maximum = 999999, Value = 42 };
         grpTrain.Controls.Add(_numSeed);
-        y += 38;
+        y += 34;
 
         // Train action buttons
         _btnStartTrain = new Button
         {
-            Text = "▶ Start Training",
+            Text = "▶ Train Model",
             Location = new Point(lblX, y),
-            Size = new Size(224, 34),
+            Size = new Size(219, 32),
             Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
             UseVisualStyleBackColor = true
         };
         _btnStartTrain.Click += BtnStartTrain_Click;
         grpTrain.Controls.Add(_btnStartTrain);
-        y += 40;
+        y += 38;
 
         _btnResetDefaults = new Button
         {
-            Text = "Reset to Tuned Defaults",
+            Text = "Reset Defaults",
             Location = new Point(lblX, y),
-            Size = new Size(224, 26),
+            Size = new Size(219, 25),
             UseVisualStyleBackColor = true
         };
         _btnResetDefaults.Click += (_, _) => ResetToDefaults();
         grpTrain.Controls.Add(_btnResetDefaults);
-        y += 42;
+        y += 38;
 
         _btnLaunchTrained = new Button
         {
             Text = "Open Canvas with Trained Model",
             Location = new Point(lblX, y),
-            Size = new Size(224, 36),
+            Size = new Size(219, 34),
             Font = new Font("Segoe UI", 9f, FontStyle.Bold),
             Enabled = false,
             UseVisualStyleBackColor = true
@@ -182,20 +176,11 @@ public sealed class MenuForm : Form
         _btnLaunchTrained.Click += (_, _) => LaunchCanvas(usePretrained: false);
         grpTrain.Controls.Add(_btnLaunchTrained);
 
-        // Right Panel: Training progress and epoch log
-        var lblLogHeader = new Label
-        {
-            Text = "Live Training Metrics & Epoch Log",
-            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-            Location = new Point(255, 24),
-            AutoSize = true
-        };
-        grpTrain.Controls.Add(lblLogHeader);
-
+        // Right Panel: Progress and Log
         _prgTraining = new ProgressBar
         {
-            Location = new Point(255, 48),
-            Size = new Size(508, 20),
+            Location = new Point(255, 24),
+            Size = new Size(508, 18),
             Minimum = 0,
             Maximum = 50,
             Value = 0
@@ -204,18 +189,18 @@ public sealed class MenuForm : Form
 
         _lblTrainingStatus = new Label
         {
-            Text = "Status: Idle. Click 'Start Training' to begin.",
-            Location = new Point(255, 72),
+            Text = "Ready to train.",
+            Location = new Point(255, 46),
             Size = new Size(508, 18),
             Font = new Font("Segoe UI", 8.5f),
-            ForeColor = Color.FromArgb(60, 60, 60)
+            ForeColor = Color.FromArgb(70, 70, 70)
         };
         grpTrain.Controls.Add(_lblTrainingStatus);
 
         _txtLog = new TextBox
         {
-            Location = new Point(255, 94),
-            Size = new Size(508, 328),
+            Location = new Point(255, 68),
+            Size = new Size(508, 336),
             Multiline = true,
             ReadOnly = true,
             ScrollBars = ScrollBars.Vertical,
@@ -234,13 +219,13 @@ public sealed class MenuForm : Form
         bool exists = File.Exists(ProjectPaths.WeightsFile);
         if (exists)
         {
-            _lblPretrainedStatus.Text = "Trained weights found: results/weights.txt (Tuned: 32 hidden units, 50 epochs, 95.99% test acc).";
+            _lblPretrainedStatus.Text = "Weights: Ready (95.99% accuracy on held-out test set).";
             _lblPretrainedStatus.ForeColor = Color.DarkGreen;
             _btnLaunchPretrained.Enabled = !_isTraining;
         }
         else
         {
-            _lblPretrainedStatus.Text = "No saved weights found yet (results/weights.txt). Train a model below to create one.";
+            _lblPretrainedStatus.Text = "No saved weights found. Train a model below to generate one.";
             _lblPretrainedStatus.ForeColor = Color.FromArgb(180, 80, 0);
             _btnLaunchPretrained.Enabled = false;
         }
@@ -283,13 +268,11 @@ public sealed class MenuForm : Form
 
         _prgTraining.Maximum = epochs;
         _prgTraining.Value = 0;
-        _lblTrainingStatus.Text = "Loading dataset and preparing stratified split...";
+        _lblTrainingStatus.Text = "Loading dataset...";
 
         _txtLog.Clear();
-        _txtLog.AppendText($"Starting Training (Hidden={hidden}, Epochs={epochs}, LrOut={lrOut:F3}, LrIn={lrIn:F3}, Seed={seed})\r\n");
-        _txtLog.AppendText(new string('=', 64) + "\r\n");
-        _txtLog.AppendText(string.Format("{0,-7} {1,-12} {2,-12} {3,-14} {4}\r\n", "Epoch", "Train MSE", "Val MSE", "Val Acc", "Elapsed"));
-        _txtLog.AppendText(new string('-', 64) + "\r\n");
+        _txtLog.AppendText(string.Format("{0,-7} {1,-12} {2,-12} {3,-12} {4}\r\n", "Epoch", "Train Loss", "Val Loss", "Val Acc", "Elapsed"));
+        _txtLog.AppendText(new string('-', 56) + "\r\n");
 
         NeuralNet? trainedNet = null;
         EvaluationReport? report = null;
@@ -308,7 +291,6 @@ public sealed class MenuForm : Form
                     Seed = seed
                 };
 
-                // Prepare dataset
                 IDatasetLoader loader = new CsvDatasetLoader();
                 var rawTrain = loader.Load(ProjectPaths.TrainFile);
                 var rawTest = loader.Load(ProjectPaths.TestFile);
@@ -333,9 +315,9 @@ public sealed class MenuForm : Form
                     {
                         if (IsDisposed) return;
                         _prgTraining.Value = Math.Min(_prgTraining.Maximum, metrics.Epoch);
-                        _lblTrainingStatus.Text = $"Epoch {metrics.Epoch}/{epochs} | Train Loss: {metrics.TrainLoss:F6} | Val Loss: {metrics.ValidationLoss:F6} | Val Acc: {metrics.ValidationAccuracy * 100:F2}%";
+                        _lblTrainingStatus.Text = $"Epoch {metrics.Epoch}/{epochs} | Loss: {metrics.TrainLoss:F5} | Val Acc: {metrics.ValidationAccuracy * 100:F2}%";
 
-                        string line = string.Format("{0,-7} {1,-12:F6} {2,-12:F6} {3,-14:F2}% {4:F1}s\r\n",
+                        string line = string.Format("{0,-7} {1,-12:F6} {2,-12:F6} {3,-12:F2}% {4:F1}s\r\n",
                             metrics.Epoch,
                             metrics.TrainLoss,
                             metrics.ValidationLoss,
@@ -347,10 +329,8 @@ public sealed class MenuForm : Form
 
                 trainer.Train(net, train, val, options, logger);
 
-                // Save weights to results/weights.txt
                 net.saveWeights(ProjectPaths.WeightsFile);
 
-                // Final evaluation on test set
                 var evaluator = new Evaluator();
                 report = evaluator.Evaluate(net, scaledTest);
                 trainedNet = net;
@@ -359,10 +339,9 @@ public sealed class MenuForm : Form
             sw.Stop();
             _trainedNet = trainedNet;
 
-            _lblTrainingStatus.Text = $"Training finished in {sw.Elapsed.TotalSeconds:F2}s! Test Accuracy: {report?.Accuracy * 100:F2}%";
-            _txtLog.AppendText(new string('=', 64) + "\r\n");
-            _txtLog.AppendText($"[COMPLETE] Final Held-Out Test Accuracy: {report?.Accuracy * 100:F2}%\r\n");
-            _txtLog.AppendText($"Weights saved to: {ProjectPaths.WeightsFile}\r\n");
+            _lblTrainingStatus.Text = $"Done in {sw.Elapsed.TotalSeconds:F1}s! Test Accuracy: {report?.Accuracy * 100:F2}%";
+            _txtLog.AppendText(new string('-', 56) + "\r\n");
+            _txtLog.AppendText($"Done in {sw.Elapsed.TotalSeconds:F1}s. Final Test Accuracy: {report?.Accuracy * 100:F2}%\r\n");
 
             _btnLaunchTrained.Enabled = true;
             _btnLaunchTrained.Focus();
@@ -371,9 +350,9 @@ public sealed class MenuForm : Form
         catch (Exception ex)
         {
             sw.Stop();
-            _lblTrainingStatus.Text = $"Training failed: {ex.Message}";
-            _txtLog.AppendText($"\r\n[ERROR] {ex.Message}\r\n");
-            MessageBox.Show($"Training error:\n{ex.Message}", "Training Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _lblTrainingStatus.Text = $"Error: {ex.Message}";
+            _txtLog.AppendText($"\r\n[Error] {ex.Message}\r\n");
+            MessageBox.Show($"Training error:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         finally
         {
@@ -389,7 +368,7 @@ public sealed class MenuForm : Form
         {
             if (!File.Exists(ProjectPaths.WeightsFile))
             {
-                MessageBox.Show("Pre-trained weights file not found. Please train a model first.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Pre-trained weights file not found.", "Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
         }
