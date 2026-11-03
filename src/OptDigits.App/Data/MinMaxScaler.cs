@@ -8,6 +8,8 @@ public sealed class MinMaxScaler
 {
     private readonly double? _fixedMin;
     private readonly double? _fixedMax;
+    private double[]? _minimums;
+    private double[]? _maximums;
 
     /// <summary>
     /// Initializes a new instance of <see cref="MinMaxScaler"/>.
@@ -25,13 +27,41 @@ public sealed class MinMaxScaler
     /// Computes the per-feature minimum and maximum from training samples unless fixed bounds were provided.
     /// </summary>
     /// <param name="samples">The training samples to fit on.</param>
-    /// <exception cref="NotImplementedException">Thrown because this method is a stub.</exception>
     public void Fit(IEnumerable<Sample> samples)
     {
-        // TODO 1: Check if _fixedMin and _fixedMax are provided; if so, return immediately (no-op)
-        // TODO 2: Otherwise iterate over all samples and find the min and max value for each feature index
-        // TODO 3: Store per-feature minimum and maximum vectors for use in Transform
-        throw new NotImplementedException("MinMaxScaler.Fit is not implemented yet");
+        ArgumentNullException.ThrowIfNull(samples);
+        if (_fixedMin.HasValue && _fixedMax.HasValue)
+        {
+            return;
+        }
+
+        using IEnumerator<Sample> enumerator = samples.GetEnumerator();
+        if (!enumerator.MoveNext())
+        {
+            throw new ArgumentException("At least one sample is required to fit the scaler.", nameof(samples));
+        }
+
+        int featureCount = enumerator.Current.Features.Length;
+        if (featureCount == 0)
+        {
+            throw new ArgumentException("Samples must contain at least one feature.", nameof(samples));
+        }
+
+        var minimums = (double[])enumerator.Current.Features.Clone();
+        var maximums = (double[])enumerator.Current.Features.Clone();
+        while (enumerator.MoveNext())
+        {
+            Sample sample = enumerator.Current;
+            ValidateFeatureCount(sample, featureCount);
+            for (int featureIndex = 0; featureIndex < featureCount; featureIndex++)
+            {
+                minimums[featureIndex] = Math.Min(minimums[featureIndex], sample.Features[featureIndex]);
+                maximums[featureIndex] = Math.Max(maximums[featureIndex], sample.Features[featureIndex]);
+            }
+        }
+
+        _minimums = minimums;
+        _maximums = maximums;
     }
 
     /// <summary>
@@ -40,14 +70,30 @@ public sealed class MinMaxScaler
     /// </summary>
     /// <param name="s">The sample to transform.</param>
     /// <returns>A new <see cref="Sample"/> with scaled features and unchanged label.</returns>
-    /// <exception cref="NotImplementedException">Thrown because this method is a stub.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the scaler has not been fitted.</exception>
     public Sample Transform(Sample s)
     {
-        // TODO 1: Allocate a new double[] array matching s.Features.Length
-        // TODO 2: For each feature, calculate (val - min) / (max - min) using fixed or fitted bounds
-        // TODO 3: Clamp result to [0.0, 1.0] to guard against out-of-range values
-        // TODO 4: Return new Sample(scaledFeatures, s.Label)
-        throw new NotImplementedException("MinMaxScaler.Transform is not implemented yet");
+        ArgumentNullException.ThrowIfNull(s);
+        double[] scaledFeatures = new double[s.Features.Length];
+        if (_fixedMin.HasValue && _fixedMax.HasValue)
+        {
+            ScaleFeatures(s.Features, scaledFeatures, _fixedMin.Value, _fixedMax.Value);
+            return new Sample(scaledFeatures, s.Label);
+        }
+
+        if (_minimums is null || _maximums is null)
+        {
+            throw new InvalidOperationException("The scaler must be fitted before Transform is called.");
+        }
+
+        ValidateFeatureCount(s, _minimums.Length);
+        for (int featureIndex = 0; featureIndex < scaledFeatures.Length; featureIndex++)
+        {
+            scaledFeatures[featureIndex] = ScaleValue(
+                s.Features[featureIndex], _minimums[featureIndex], _maximums[featureIndex]);
+        }
+
+        return new Sample(scaledFeatures, s.Label);
     }
 
     /// <summary>
@@ -55,11 +101,32 @@ public sealed class MinMaxScaler
     /// </summary>
     /// <param name="samples">Collection of samples to scale.</param>
     /// <returns>Read-only list of scaled samples.</returns>
-    /// <exception cref="NotImplementedException">Thrown because this method is a stub.</exception>
     public IReadOnlyList<Sample> TransformAll(IEnumerable<Sample> samples)
     {
-        // TODO 1: Iterate over samples and call Transform on each
-        // TODO 2: Return transformed samples as an IReadOnlyList<Sample>
-        throw new NotImplementedException("MinMaxScaler.TransformAll is not implemented yet");
+        ArgumentNullException.ThrowIfNull(samples);
+        return samples.Select(Transform).ToList();
+    }
+
+    private static void ScaleFeatures(double[] source, double[] destination, double minimum, double maximum)
+    {
+        for (int featureIndex = 0; featureIndex < source.Length; featureIndex++)
+        {
+            destination[featureIndex] = ScaleValue(source[featureIndex], minimum, maximum);
+        }
+    }
+
+    private static double ScaleValue(double value, double minimum, double maximum)
+    {
+        return maximum == minimum ? 0.0 : (value - minimum) / (maximum - minimum);
+    }
+
+    private static void ValidateFeatureCount(Sample sample, int expectedFeatureCount)
+    {
+        if (sample.Features.Length != expectedFeatureCount)
+        {
+            throw new ArgumentException(
+                $"All samples must have {expectedFeatureCount} features, but one sample has {sample.Features.Length}.",
+                nameof(sample));
+        }
     }
 }
