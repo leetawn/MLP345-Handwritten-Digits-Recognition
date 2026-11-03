@@ -23,14 +23,3 @@ The dataset contains normalized bitmaps of handwritten digits extracted from pre
   - The 65th column is the ground-truth digit class label in the range $[0, 9]$.
 - **Missing Values**: None.
 
-## Citation
-If you use this dataset, please cite:
-```bibtex
-@misc{optdigits_80,
-  author       = {Alpaydin, E. and Kaynak, C.},
-  title        = {{Optical Recognition of Handwritten Digits}},
-  year         = {1998},
-  howpublished = {UCI Machine Learning Repository},
-  note         = {{DOI}: https://doi.org/10.24432/C50P49}
-}
-```

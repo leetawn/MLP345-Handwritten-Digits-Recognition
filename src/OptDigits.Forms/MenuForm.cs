@@ -12,10 +12,8 @@ using OptDigits.Training;
 
 namespace OptDigits.Forms;
 
-/// <summary>
-/// Main Menu form allowing users to either launch the drawing canvas with a pre-trained model
-/// or train a custom MLP with real-time epoch metrics and visual progress.
-/// </summary>
+// Main Menu form allowing users to either launch the drawing canvas with a pre-trained model
+// or train a custom MLP with real-time epoch metrics and visual progress.
 public sealed class MenuForm : Form
 {
     private readonly Label _lblPretrainedStatus;
@@ -37,7 +35,7 @@ public sealed class MenuForm : Form
     private NeuralNet? _trainedNet;
     private bool _isTraining;
 
-    /// <summary>Initializes a new instance of <see cref="MenuForm"/>.</summary>
+    // Initializes a new instance of MenuForm.
     public MenuForm()
     {
         Text = "OptDigits MLP - Main Menu";
@@ -387,9 +385,7 @@ public sealed class MenuForm : Form
     }
 }
 
-/// <summary>
-/// Simple adapter bridging <see cref="ILossLogger"/> to a callback for UI updates.
-/// </summary>
+// Simple adapter bridging ILossLogger to a callback for UI updates.
 internal sealed class FormLossLogger : ILossLogger
 {
     private readonly Action<EpochMetrics> _onLog;

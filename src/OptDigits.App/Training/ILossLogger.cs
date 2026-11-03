@@ -1,13 +1,9 @@
 namespace OptDigits.Training;
 
-/// <summary>
-/// Defines the contract for logging training progress and epoch metrics.
-/// </summary>
+// Defines the contract for logging training progress and epoch metrics.
 public interface ILossLogger : IDisposable
 {
-    /// <summary>
-    /// Records metrics for a single completed epoch.
-    /// </summary>
-    /// <param name="metrics">Metrics for the epoch.</param>
+    // Records metrics for a single completed epoch.
+    // metrics: Metrics for the epoch.
     void Log(EpochMetrics metrics);
 }

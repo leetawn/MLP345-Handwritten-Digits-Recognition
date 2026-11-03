@@ -3,22 +3,17 @@ using System.Text;
 
 namespace OptDigits.Evaluation;
 
-/// <summary>
-/// Detailed evaluation report containing overall accuracy, per-class metrics, and confusion matrix.
-/// </summary>
-/// <param name="Accuracy">Overall classification accuracy.</param>
-/// <param name="PerClass">List of per-digit class metrics (precision, recall, F1, support).</param>
-/// <param name="ConfusionMatrix">2D confusion matrix where rows represent actual classes and columns represent predicted classes.</param>
-/// <remarks>Owner: Partner B</remarks>
+// Detailed evaluation report containing overall accuracy, per-class metrics, and confusion matrix.
+// Accuracy: Overall classification accuracy.
+// PerClass: List of per-digit class metrics (precision, recall, F1, support).
+// ConfusionMatrix: 2D confusion matrix where rows represent actual classes and columns represent predicted classes.
 public sealed record EvaluationReport(
     double Accuracy,
     IReadOnlyList<ClassMetrics> PerClass,
     int[,] ConfusionMatrix)
 {
-    /// <summary>
-    /// Formats the evaluation metrics and confusion matrix into a human-readable console string.
-    /// </summary>
-    /// <returns>Formatted multi-line report string.</returns>
+    // Formats the evaluation metrics and confusion matrix into a human-readable console string.
+    // Returns: Formatted multi-line report string.
     public string ToConsoleString()
     {
         var builder = new StringBuilder();
@@ -58,11 +53,9 @@ public sealed record EvaluationReport(
         return builder.ToString();
     }
 
-    /// <summary>
-    /// Saves the confusion matrix to a CSV file.
-    /// Header: actual,pred_0,pred_1,pred_2,pred_3,pred_4,pred_5,pred_6,pred_7,pred_8,pred_9
-    /// </summary>
-    /// <param name="path">Destination CSV file path.</param>
+    // Saves the confusion matrix to a CSV file.
+    // Header: actual,pred_0,pred_1,pred_2,pred_3,pred_4,pred_5,pred_6,pred_7,pred_8,pred_9
+    // path: Destination CSV file path.
     public void SaveConfusionMatrixCsv(string path)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);

@@ -2,26 +2,21 @@ using System.Globalization;
 
 namespace OptDigits.Data;
 
-/// <summary>
-/// Loads handwritten digit samples from CSV formatted dataset files.
-/// </summary>
-/// <remarks>Owner: Partner B</remarks>
+// Loads handwritten digit samples from CSV formatted dataset files.
 public sealed class CsvDatasetLoader : IDatasetLoader
 {
-    /// <summary>
-    /// Reads and parses an optdigits raw CSV file into a collection of <see cref="Sample"/> objects.
-    /// Each line contains 64 pixel values (0-16) followed by the integer class label (0-9).
-    /// </summary>
-    /// <param name="path">Path to the optdigits data file.</param>
-    /// <returns>A read-only list of parsed digit samples.</returns>
-    /// <exception cref="FileNotFoundException">Thrown when the dataset file does not exist.</exception>
-    /// <exception cref="FormatException">Thrown when a row contains invalid data.</exception>
+    // Reads and parses an optdigits raw CSV file into a collection of Sample objects.
+    // Each line contains 64 pixel values (0-16) followed by the integer class label (0-9).
+    // path: Path to the optdigits data file.
+    // Returns: A read-only list of parsed digit samples.
+    // Throws FileNotFoundException: Thrown when the dataset file does not exist.
+    // Throws FormatException: Thrown when a row contains invalid data.
     public IReadOnlyList<Sample> Load(string path)
     {
         if (!File.Exists(path))
         {
             throw new FileNotFoundException(
-                $"Dataset file '{path}' was not found. Run tools/download-data.sh or tools/download-data.ps1 first.",
+                $"Dataset file '{path}' was not found. Place the OptDigits dataset files in data/raw/.",
                 path);
         }
 

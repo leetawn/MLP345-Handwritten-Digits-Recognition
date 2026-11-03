@@ -6,16 +6,11 @@ using OptDigits.Training;
 
 namespace OptDigits.App;
 
-/// <summary>
-/// CLI entry point for training, sweeping hyperparameters, and evaluating the digit recognition network.
-/// </summary>
+// CLI entry point supporting train, sweep, and evaluate commands.
 public static class Program
 {
-    /// <summary>
-    /// Application main entry point.
-    /// </summary>
-    /// <param name="args">Command line arguments.</param>
-    /// <returns>Exit code: 0 for success, 1 for error, 2 for NotImplementedException.</returns>
+    // Parses the first argument as a command and dispatches to the appropriate handler.
+    // Returns 0 for success, 1 for error, 2 for NotImplementedException.
     public static int Main(string[] args)
     {
         try
@@ -39,7 +34,7 @@ public static class Program
         }
         catch (NotImplementedException ex)
         {
-            Console.Error.WriteLine($"{ex.Message} — see docs/TASKS.md");
+            Console.Error.WriteLine(ex.Message);
             return 2;
         }
         catch (Exception ex)
@@ -160,7 +155,7 @@ public static class Program
 
         if (!File.Exists(ProjectPaths.TestFile))
         {
-            Console.Error.WriteLine($"Test dataset not found at: {ProjectPaths.TestFile}. Run tools/download-data.sh or tools/download-data.ps1 first.");
+            Console.Error.WriteLine($"Test dataset not found at: {ProjectPaths.TestFile}. Ensure optdigits.tes is placed in data/raw/.");
             return 1;
         }
 
@@ -220,8 +215,8 @@ public static class Program
         Console.WriteLine("Train Options:");
         Console.WriteLine("  --hidden <N>       Number of hidden layer neurons (default: 32)");
         Console.WriteLine("  --epochs <N>       Number of training epochs (default: 50)");
-        Console.WriteLine("  --lr-out <X>       Hidden-to-output learning rate (default: 0.2)");
-        Console.WriteLine("  --lr-in <X>        Input-to-hidden learning rate (default: 0.15)");
+        Console.WriteLine("  --lr-out <X>       Hidden-to-output learning rate (default: 0.5)");
+        Console.WriteLine("  --lr-in <X>        Input-to-hidden learning rate (default: 0.375)");
         Console.WriteLine("  --seed <N>         Random seed for weight init and splitting (default: 42)");
         Console.WriteLine("  --log-every <N>    Epoch logging interval (default: 5)");
     }

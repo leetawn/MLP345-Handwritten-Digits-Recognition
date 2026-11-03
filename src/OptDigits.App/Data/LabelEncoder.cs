@@ -1,18 +1,13 @@
 namespace OptDigits.Data;
 
-/// <summary>
-/// Provides utility methods for one-hot encoding integer labels and computing argmax class indices.
-/// </summary>
-/// <remarks>Owner: Partner B</remarks>
+// Provides utility methods for one-hot encoding integer labels and computing argmax class indices.
 public static class LabelEncoder
 {
-    /// <summary>
-    /// Converts a categorical integer class label into a one-hot vector representation of length <paramref name="classCount"/>.
-    /// </summary>
-    /// <param name="label">The integer class index (e.g. 0 to 9).</param>
-    /// <param name="classCount">Total number of classes.</param>
-    /// <returns>A double array with 1.0 at index <paramref name="label"/> and 0.0 elsewhere.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when the label is not a valid class index.</exception>
+    // Converts a categorical integer class label into a one-hot vector representation of length classCount.
+    // label: The integer class index (e.g. 0 to 9).
+    // classCount: Total number of classes.
+    // Returns: A double array with 1.0 at index label and 0.0 elsewhere.
+    // Throws ArgumentOutOfRangeException: Thrown when the label is not a valid class index.
     public static double[] OneHot(int label, int classCount)
     {
         if (label < 0 || label >= classCount)
@@ -25,12 +20,10 @@ public static class LabelEncoder
         return encoded;
     }
 
-    /// <summary>
-    /// Finds the index of the maximum value in a list of numeric values (argmax).
-    /// </summary>
-    /// <param name="values">Collection of numeric values (e.g. neuron activation scores).</param>
-    /// <returns>Zero-based index of the maximum element.</returns>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="values"/> is empty.</exception>
+    // Finds the index of the maximum value in a list of numeric values (argmax).
+    // values: Collection of numeric values (e.g. neuron activation scores).
+    // Returns: Zero-based index of the maximum element.
+    // Throws ArgumentException: Thrown when values is empty.
     public static int ArgMax(IReadOnlyList<double> values)
     {
         ArgumentNullException.ThrowIfNull(values);

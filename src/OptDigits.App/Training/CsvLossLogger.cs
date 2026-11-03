@@ -3,22 +3,17 @@ using System.IO;
 
 namespace OptDigits.Training;
 
-/// <summary>
-/// Logs epoch training and validation loss metrics to a CSV file and echoes them to the console.
-/// </summary>
-/// <remarks>Owner: Partner A</remarks>
+// Logs epoch training and validation loss metrics to a CSV file and echoes them to the console.
 public sealed class CsvLossLogger : ILossLogger
 {
     private readonly StreamWriter _writer;
     private readonly int? _totalEpochs;
     private bool _disposed;
 
-    /// <summary>
-    /// Initializes a new instance of <see cref="CsvLossLogger"/>, creating the CSV file (overwriting existing) and writing header columns.
-    /// Header: epoch,train_loss,validation_loss,validation_accuracy
-    /// </summary>
-    /// <param name="path">Destination file path for the CSV log.</param>
-    /// <param name="totalEpochs">Optional total epoch count used for console progress formatting.</param>
+    // Initializes a new instance of CsvLossLogger, creating the CSV file (overwriting existing) and writing header columns.
+    // Header: epoch,train_loss,validation_loss,validation_accuracy
+    // path: Destination file path for the CSV log.
+    // totalEpochs: Optional total epoch count used for console progress formatting.
     public CsvLossLogger(string path, int? totalEpochs = null)
     {
         string? dir = Path.GetDirectoryName(path);
@@ -33,10 +28,8 @@ public sealed class CsvLossLogger : ILossLogger
         _writer.Flush();
     }
 
-    /// <summary>
-    /// Logs a single epoch's metrics to CSV using invariant culture formatting and prints a progress line to the console.
-    /// </summary>
-    /// <param name="metrics">The metrics measured for the epoch.</param>
+    // Logs a single epoch's metrics to CSV using invariant culture formatting and prints a progress line to the console.
+    // metrics: The metrics measured for the epoch.
     public void Log(EpochMetrics metrics)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
@@ -66,9 +59,7 @@ public sealed class CsvLossLogger : ILossLogger
                 metrics.ValidationAccuracy));
     }
 
-    /// <summary>
-    /// Disposes the underlying stream writer resources. Safe to call multiple times.
-    /// </summary>
+    // Disposes the underlying stream writer resources. Safe to call multiple times.
     public void Dispose()
     {
         if (_disposed) return;

@@ -1,25 +1,17 @@
 namespace Backprop;
 
-/// <summary>
-/// Provides a shared, seedable pseudo-random number generator for initializing network weights and biases.
-/// </summary>
+// Shared seedable random number generator for network weight initialization.
 public static class Rng
 {
     private static Random _rand = new();
 
-    /// <summary>
-    /// Seeds the underlying random number generator to ensure reproducible initializations.
-    /// </summary>
-    /// <param name="seed">The integer seed value.</param>
+    // Seeds the RNG for reproducible weight initialization.
     public static void Seed(int seed)
     {
         _rand = new Random(seed);
     }
 
-    /// <summary>
-    /// Generates a random initial weight or bias in the uniform distribution [-0.5, 0.5).
-    /// </summary>
-    /// <returns>A random floating-point value between -0.5 (inclusive) and 0.5 (exclusive).</returns>
+    // Returns a random value in [-0.5, 0.5) for weight/bias initialization.
     public static double NextWeight()
     {
         int maxLimit = 1000;

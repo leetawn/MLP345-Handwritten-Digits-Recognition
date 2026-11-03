@@ -1,19 +1,14 @@
 namespace OptDigits.Data;
 
-/// <summary>
-/// Splits a dataset into training and validation subsets using stratified sampling.
-/// </summary>
-/// <remarks>Owner: Partner B</remarks>
+// Splits a dataset into training and validation subsets using stratified sampling.
 public static class DatasetSplitter
 {
-    /// <summary>
-    /// Partitions a collection of samples into training and validation sets, preserving class distributions.
-    /// </summary>
-    /// <param name="samples">The full dataset to split.</param>
-    /// <param name="validationFraction">Fraction of samples to assign to the validation set (e.g. 0.2 for 20%).</param>
-    /// <param name="seed">Random seed for reproducible shuffling.</param>
-    /// <returns>A tuple containing the stratified Train and Validation read-only sample lists.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="validationFraction"/> is not between 0 and 1.</exception>
+    // Partitions a collection of samples into training and validation sets, preserving class distributions.
+    // samples: The full dataset to split.
+    // validationFraction: Fraction of samples to assign to the validation set (e.g. 0.2 for 20%).
+    // seed: Random seed for reproducible shuffling.
+    // Returns: A tuple containing the stratified Train and Validation read-only sample lists.
+    // Throws ArgumentOutOfRangeException: Thrown when validationFraction is not between 0 and 1.
     public static (IReadOnlyList<Sample> Train, IReadOnlyList<Sample> Validation) Split(
         IReadOnlyList<Sample> samples,
         double validationFraction,

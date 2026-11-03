@@ -1,16 +1,14 @@
 namespace OptDigits.Experiments;
 
-/// <summary>
-/// Records results and execution time of a single hyperparameter configuration trial.
-/// </summary>
-/// <param name="LearningRateOut">Output layer learning rate.</param>
-/// <param name="LearningRateIn">Input layer learning rate.</param>
-/// <param name="HiddenSize">Number of hidden neurons.</param>
-/// <param name="Epochs">Epochs trained.</param>
-/// <param name="FinalTrainLoss">Final mean squared error on training data.</param>
-/// <param name="FinalValidationLoss">Final mean squared error on validation data.</param>
-/// <param name="ValidationAccuracy">Final classification accuracy on validation data.</param>
-/// <param name="Seconds">Execution duration in seconds.</param>
+// Records results and execution time of a single hyperparameter configuration trial.
+// LearningRateOut: Output layer learning rate.
+// LearningRateIn: Input layer learning rate.
+// HiddenSize: Number of hidden neurons.
+// Epochs: Epochs trained.
+// FinalTrainLoss: Final mean squared error on training data.
+// FinalValidationLoss: Final mean squared error on validation data.
+// ValidationAccuracy: Final classification accuracy on validation data.
+// Seconds: Execution duration in seconds.
 public sealed record ExperimentRow(
     double LearningRateOut,
     double LearningRateIn,

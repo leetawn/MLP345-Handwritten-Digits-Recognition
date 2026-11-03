@@ -4,15 +4,11 @@ using System.Drawing.Drawing2D;
 
 namespace OptDigits.Forms;
 
-/// <summary>
-/// Preprocesses freehand drawing on canvas into normalized 64-dimensional feature vectors matching the UCI optdigits format.
-/// </summary>
+// Preprocesses freehand drawing on canvas into normalized 64-dimensional feature vectors matching the UCI optdigits format.
 public static class DigitExtractor
 {
-    /// <summary>
-    /// Extracts 64 normalized features from a canvas bitmap (white background, black stroke).
-    /// Returns (features, downsampledPreview, hasDrawing).
-    /// </summary>
+    // Extracts 64 normalized features from a canvas bitmap (white background, black stroke).
+    // Returns (features, downsampledPreview, hasDrawing).
     public static (double[] Features, Bitmap Preview8x8, bool HasDrawing) ExtractFeatures(Bitmap canvas)
     {
         int minX = int.MaxValue, minY = int.MaxValue;

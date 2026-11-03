@@ -1,14 +1,10 @@
 namespace OptDigits.Data;
 
-/// <summary>
-/// Defines the contract for loading digit samples from raw data files.
-/// </summary>
+// Defines the contract for loading digit samples from raw data files.
 public interface IDatasetLoader
 {
-    /// <summary>
-    /// Loads digit samples from the specified file path.
-    /// </summary>
-    /// <param name="path">Path to the raw dataset file.</param>
-    /// <returns>A read-only list of parsed <see cref="Sample"/> records.</returns>
+    // Loads digit samples from the specified file path.
+    // path: Path to the raw dataset file.
+    // Returns: A read-only list of parsed Sample records.
     IReadOnlyList<Sample> Load(string path);
 }

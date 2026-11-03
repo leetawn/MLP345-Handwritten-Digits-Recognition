@@ -9,9 +9,7 @@ using OptDigits.App;
 
 namespace OptDigits.Forms;
 
-/// <summary>
-/// Main window form offering an interactive drawing canvas with real-time digit classification.
-/// </summary>
+// Main window form offering an interactive drawing canvas with real-time digit classification.
 public sealed class MainForm : Form
 {
     // ── Layout constants (all pixel values verified) ──────────────────────────
@@ -42,8 +40,8 @@ public sealed class MainForm : Form
     private bool _isDrawing;
     private readonly Pen _drawPen;
 
-    /// <summary>Initializes a new instance of <see cref="MainForm"/>.</summary>
-    /// <param name="preloadedNet">An optional already-trained neural network instance. If null, loads from weights file.</param>
+    // Initializes a new instance of MainForm.
+    // preloadedNet: An optional already-trained neural network instance. If null, loads from weights file.
     public MainForm(NeuralNet? preloadedNet = null)
     {
         Text = "OptDigits MLP Demo";
@@ -295,7 +293,7 @@ public sealed class MainForm : Form
         }
     }
 
-    /// <summary>Releases managed resources.</summary>
+    // Releases managed resources.
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -310,9 +308,7 @@ public sealed class MainForm : Form
 
 // ── DigitBarControl ───────────────────────────────────────────────────────────
 
-/// <summary>
-/// Lightweight owner-drawn progress bar showing raw MLP activation for one digit class.
-/// </summary>
+// Lightweight owner-drawn progress bar showing raw MLP activation for one digit class.
 public sealed class DigitBarControl : UserControl
 {
     private readonly int _digit;
@@ -321,7 +317,7 @@ public sealed class DigitBarControl : UserControl
     private readonly Font _normalFont;
     private readonly Font _boldFont;
 
-    /// <summary>Initializes a new <see cref="DigitBarControl"/> for digit class <paramref name="digit"/>.</summary>
+    // Initializes a new DigitBarControl for digit class digit.
     public DigitBarControl(int digit)
     {
         _digit = digit;
@@ -331,7 +327,7 @@ public sealed class DigitBarControl : UserControl
         SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
     }
 
-    /// <summary>Sets the activation level and repaints.</summary>
+    // Sets the activation level and repaints.
     public void UpdateActivation(double activation, bool isWinner)
     {
         _activation = Math.Clamp(activation, 0.0, 1.0);
@@ -339,7 +335,7 @@ public sealed class DigitBarControl : UserControl
         Invalidate();
     }
 
-    /// <summary>Paints label, track, fill, and percentage.</summary>
+    // Paints label, track, fill, and percentage.
     protected override void OnPaint(PaintEventArgs e)
     {
         var g = e.Graphics;
@@ -376,7 +372,6 @@ public sealed class DigitBarControl : UserControl
             new StringFormat { Alignment = StringAlignment.Far });
     }
 
-    /// <inheritdoc/>
     protected override void Dispose(bool disposing)
     {
         if (disposing) { _normalFont.Dispose(); _boldFont.Dispose(); }

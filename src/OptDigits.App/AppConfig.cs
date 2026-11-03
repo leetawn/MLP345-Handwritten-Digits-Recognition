@@ -1,18 +1,16 @@
 namespace OptDigits.App;
 
-/// <summary>
-/// Global application configuration settings and default hyperparameters.
-/// </summary>
-/// <param name="InputSize">Number of input features per sample (64 pixels).</param>
-/// <param name="ClassCount">Number of target classes (digits 0 to 9).</param>
-/// <param name="PixelMax">Maximum pixel value in raw optdigits data (16).</param>
-/// <param name="HiddenSize">Default number of hidden layer neurons.</param>
-/// <param name="Epochs">Default number of training epochs.</param>
-/// <param name="LearningRateOut">Default output layer learning rate.</param>
-/// <param name="LearningRateIn">Default input-to-hidden layer learning rate.</param>
-/// <param name="Seed">Default random seed for reproducible weight initialization and splitting.</param>
-/// <param name="LogEvery">Interval in epochs between progress logging and loss evaluations.</param>
-/// <param name="ValidationFraction">Fraction of training samples reserved for validation.</param>
+// Global application configuration with default hyperparameters for training and evaluation.
+// InputSize: number of input features (64 pixel blocks per sample).
+// ClassCount: number of output classes (digits 0–9).
+// PixelMax: raw optdigits pixel maximum (16), used for min-max scaling.
+// HiddenSize: default number of hidden layer neurons.
+// Epochs: default training epoch count.
+// LearningRateOut: default learning rate for hidden-to-output connections.
+// LearningRateIn: default learning rate for input-to-hidden connections.
+// Seed: default random seed for reproducible initialization and splitting.
+// LogEvery: epoch interval between logged loss evaluations.
+// ValidationFraction: fraction of training samples held out for validation.
 public sealed record AppConfig(
     int InputSize = 64,
     int ClassCount = 10,

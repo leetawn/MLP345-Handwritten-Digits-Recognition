@@ -88,7 +88,7 @@ flowchart TD
 | **Experiments: Grid & Row** | `OptDigits.Experiments` | `src/OptDigits.App/Experiments/ExperimentGrid.cs` | Search grid definition and trial result container. | Shared |
 | **Experiments: ExperimentRunner** | `OptDigits.Experiments` | `src/OptDigits.App/Experiments/ExperimentRunner.cs` | Executes automated grid search over learning rates, hidden sizes, and epochs; logs `sweep.csv`. | Partner A |
 | **App: Program & Paths** | `OptDigits.App` | `src/OptDigits.App/Program.cs` | Thin CLI orchestrator handling `train`, `sweep`, `evaluate` commands and environment path discovery. | Shared |
-| **Tools & Visualization** | External | `tools/` | Automated dataset download scripts (`.sh`, `.ps1`) and matplotlib loss/confusion matrix plotting. | Partner B |
+| **Results Artifacts** | External | `results/` | CSV training logs, hyperparameter-sweep results, saved weights, and confusion matrices. | Shared |
 
 ---
 

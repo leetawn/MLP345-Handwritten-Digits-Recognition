@@ -54,13 +54,10 @@ optdigits-mlp/
 ├── data/
 │   └── raw/                           # Raw optdigits.tra and optdigits.tes dataset files
 ├── docs/
-│   ├── TASKS.md                       # Task checklist and implementation contracts for Partner A & B
 │   ├── architecture.md                # System flowchart and component responsibilities
 │   ├── data-description.md            # Dataset provenance, statistics, and preprocessing plan
-│   ├── experiments.md                 # Hyperparameter sweep template and tuning notes
-│   └── CONTRIBUTING.md                # Contribution rules, branch strategy, and PR guidelines
-├── results/                           # Output artifacts (.csv logs, .png plots, weights.txt)
-├── tools/                             # Data download scripts and matplotlib plotting utilities
+│   └── experiments.md                 # Hyperparameter sweep results and tuning notes
+├── results/                           # Output artifacts (.csv logs, confusion matrix, weights.txt)
 └── src/
     ├── Backprop.Engine/               # Pure C# neural network engine (no external dependencies)
     └── OptDigits.App/                 # Console application (CLI orchestration, data, training, evaluation)
@@ -70,21 +67,13 @@ optdigits-mlp/
 
 ## Prerequisites
 - **.NET SDK**: .NET 8.0 LTS or later (`dotnet --version`).
-- **Python (Optional, for plots)**: Python 3.9+ with `matplotlib`, `pandas`, `numpy` (see `tools/requirements.txt`).
 
 ---
 
 ## Quick Start
 
-### 1. Download Dataset
-Download the UCI optdigits dataset into `data/raw/`:
-```bash
-# On Linux / macOS / Git Bash:
-./tools/download-data.sh
-
-# On Windows PowerShell:
-powershell -ExecutionPolicy Bypass -File tools/download-data.ps1
-```
+### 1. Confirm the Dataset
+The repository includes `data/raw/optdigits.tra` and `data/raw/optdigits.tes`. If either file is missing, download the OptDigits dataset from the UCI link in [References](#references) and place both files in `data/raw/`.
 
 ### 2. Build the Solution
 ```bash
@@ -96,7 +85,7 @@ dotnet build
 #### Train Model
 Train network with default or custom hyperparameters, evaluate on test data, and persist weights:
 ```bash
-dotnet run --project src/OptDigits.App -- train --epochs 50 --hidden 32 --lr-out 0.2 --lr-in 0.15
+dotnet run --project src/OptDigits.App -- train --epochs 50 --hidden 32 --lr-out 0.5 --lr-in 0.375
 ```
 
 #### Sweep Hyperparameters
@@ -111,25 +100,14 @@ Evaluate saved weights (`results/weights.txt`) against the held-out test set:
 dotnet run --project src/OptDigits.App -- evaluate
 ```
 
-### 4. Plot Loss Curves and Confusion Matrix (Optional)
-```bash
-pip install -r tools/requirements.txt
-python tools/plot_results.py
-```
-This generates:
-- `results/loss_curve.png`: Training loss, validation loss, and validation accuracy curves.
-- `results/confusion_matrix.png`: Heatmap visualization of digit classifications.
-
----
-
 ## CLI Options
 
 | Command | Option | Type | Default | Description |
 | :--- | :--- | :---: | :---: | :--- |
 | `train` | `--hidden` | `int` | `32` | Number of neurons in the hidden layer |
 | `train` | `--epochs` | `int` | `50` | Total training epochs |
-| `train` | `--lr-out` | `double` | `0.2` | Output layer learning rate |
-| `train` | `--lr-in` | `double` | `0.15` | Input-to-hidden layer learning rate |
+| `train` | `--lr-out` | `double` | `0.5` | Output layer learning rate |
+| `train` | `--lr-in` | `double` | `0.375` | Input-to-hidden layer learning rate |
 | `train` | `--seed` | `int` | `42` | Random seed for weight init and splitting |
 | `train` | `--log-every`| `int` | `5` | Epoch interval for logging metrics |
 | `sweep` | *(none)* | - | - | Runs full parameter search over `ExperimentGrid.Default` |
@@ -153,7 +131,7 @@ Complete sweep logs and analysis are tracked in [docs/experiments.md](docs/exper
 
 | Configuration | LrOut | LrIn | Hidden Size | Epochs | Val Accuracy (%) | Final Val Loss |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Best Configuration** | 0.50 | 0.375 | 32 | 50 | 98.82% | 0.002890 |
+| **Selected efficiency configuration** | 0.50 | 0.375 | 32 | 50 | 98.82% | 0.002890 |
 | **Baseline Configuration** | 0.20 | 0.150 | 32 | 50 | 98.43% | 0.003364 |
 
 ---

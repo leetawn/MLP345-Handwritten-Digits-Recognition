@@ -7,23 +7,18 @@ using OptDigits.Training;
 
 namespace OptDigits.Experiments;
 
-/// <summary>
-/// Executes systematic hyperparameter sweeps over specified combinations of learning rates, hidden layer sizes, and epochs.
-/// </summary>
-/// <remarks>Owner: Partner A</remarks>
+// Executes systematic hyperparameter sweeps over specified combinations of learning rates, hidden layer sizes, and epochs.
 public sealed class ExperimentRunner
 {
-    /// <summary>
-    /// Runs a grid search over hyperparameters, logging results incrementally to a CSV file and returning all row metrics.
-    /// Header: lr_out,lr_in,hidden_size,epochs,train_loss,validation_loss,validation_accuracy,seconds
-    /// </summary>
-    /// <param name="grid">The grid specifying candidate learning rates, hidden sizes, and epoch counts.</param>
-    /// <param name="train">Training samples.</param>
-    /// <param name="validation">Validation samples.</param>
-    /// <param name="baseOptions">Base training options supplying default seed and log intervals.</param>
-    /// <param name="outputCsvPath">File path where sweep results CSV is saved.</param>
-    /// <returns>A read-only list of <see cref="ExperimentRow"/> records containing metrics for every evaluated trial, ordered by loop iteration.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="grid"/>, <paramref name="train"/>, <paramref name="validation"/>, or <paramref name="outputCsvPath"/> is null.</exception>
+    // Runs a grid search over hyperparameters, logging results incrementally to a CSV file and returning all row metrics.
+    // Header: lr_out,lr_in,hidden_size,epochs,train_loss,validation_loss,validation_accuracy,seconds
+    // grid: The grid specifying candidate learning rates, hidden sizes, and epoch counts.
+    // train: Training samples.
+    // validation: Validation samples.
+    // baseOptions: Base training options supplying default seed and log intervals.
+    // outputCsvPath: File path where sweep results CSV is saved.
+    // Returns: A read-only list of ExperimentRow records containing metrics for every evaluated trial, ordered by loop iteration.
+    // Throws ArgumentNullException: Thrown if grid, train, validation, or outputCsvPath is null.
     public IReadOnlyList<ExperimentRow> Run(
         ExperimentGrid grid,
         IReadOnlyList<Sample> train,

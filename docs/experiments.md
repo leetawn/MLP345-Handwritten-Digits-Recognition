@@ -26,7 +26,7 @@ Baseline fixed parameters: `HiddenSize = 32`, `Epochs = 50`, `Seed = 42`.
 | **LR-2** | 0.05 | 0.0375 | 0.004392 | 0.005462 | 97.12% | 14.47s | Moderate gradient updates |
 | **LR-3** | 0.10 | 0.0750 | 0.002846 | 0.004170 | 97.77% | 14.57s | Good convergence |
 | **LR-4** | 0.20 | 0.1500 | 0.001660 | 0.003364 | 98.43% | 14.49s | Default baseline |
-| **LR-5** | 0.50 | 0.3750 | 0.000720 | 0.002890 | 98.82% | 14.52s | Highest accuracy & lowest val loss |
+| **LR-5** | 0.50 | 0.3750 | 0.000720 | 0.002890 | 98.82% | 14.52s | Highest accuracy for the selected 32-unit, 50-epoch comparison |
 
 ---
 
@@ -58,12 +58,12 @@ Evaluated with chosen learning rate and hidden layer size ($\eta_{\text{out}} = 
 | :--- | :---: | :--- |
 | **Output Learning Rate ($\eta_{\text{out}}$)** | 0.50 | Accelerates convergence and reaches peak validation accuracy (98.82%) without gradient instability. |
 | **Input Learning Rate ($\eta_{\text{in}}$)** | 0.375 | Maintains canonical 0.75 ratio to output layer, stabilizing input-to-hidden representations. |
-| **Hidden Layer Size** | 32 | Yields the highest validation accuracy (98.82%), outperforming 16 units (98.03%) and matching 64 units while using half the compute and parameters. |
+| **Hidden Layer Size** | 32 | Matches the peak validation accuracy (98.82%) while using half the compute and parameters of the 64-unit alternative. |
 | **Training Epochs** | 50 | Achieves 98.82% validation accuracy in just 14.5s; running for 100 epochs yields identical accuracy but halves throughput and shows mild overfitting signals. |
 | **Random Seed** | 42 | Fixed for deterministic weight initialization and reproducible stratified splits. |
 
 *Summary of Justification*:
-> The grid search established that $\eta_{\text{out}} = 0.50$ and $\eta_{\text{in}} = 0.3750$ deliver the most effective gradient descent trajectory on the normalized $8 \times 8$ OptDigits feature space, consistently achieving 98.82% validation accuracy without divergence. A hidden layer of 32 neurons provides optimal non-linear representational capacity for handwritten digit discrimination, matching or exceeding 64 hidden units while cutting computational runtime and parameter memory in half. While extending training to 100 epochs drops training loss further ($0.000720 \to 0.000343$), validation loss plateaus ($0.002890 \to 0.002813$) and validation accuracy remains unchanged at 98.82%, indicating that 50 epochs is the optimal convergence threshold. Evaluating this selected configuration on the held-out test set (`optdigits.tes`) verified high generalization performance, producing an overall test accuracy of **95.99%** with well-balanced precision and recall across all digits.
+> The grid search established that $\eta_{\text{out}} = 0.50$ and $\eta_{\text{in}} = 0.3750$ deliver a fast, stable gradient-descent trajectory on the normalized $8 \times 8$ OptDigits feature space, reaching 98.82% validation accuracy without divergence. A hidden layer of 32 neurons is the selected efficiency configuration: it matches the peak validation accuracy while using half the compute and parameters of the 64-unit alternative. While extending training to 100 epochs slightly reduces loss, validation accuracy remains unchanged at 98.82%; 50 epochs therefore offers the preferred speed/accuracy trade-off. Evaluating this selected configuration on the held-out test set (`optdigits.tes`) verified high generalization performance, producing an overall test accuracy of **95.99%** with well-balanced precision and recall across all digits.
 
 ### Final Verification Results on Held-Out Test Set (`optdigits.tes`)
 - **Overall Accuracy**: **95.99%** (1,725 / 1,797 correct)

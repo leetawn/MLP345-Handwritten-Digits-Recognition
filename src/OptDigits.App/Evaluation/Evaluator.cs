@@ -4,19 +4,14 @@ using OptDigits.Data;
 
 namespace OptDigits.Evaluation;
 
-/// <summary>
-/// Evaluates trained neural network models against labeled datasets.
-/// </summary>
-/// <remarks>Owner: Partner B</remarks>
+// Evaluates trained neural network models against labeled datasets.
 public sealed class Evaluator
 {
-    /// <summary>
-    /// Performs model inference over all samples, computing accuracy, confusion matrix, precision, recall, and F1 scores.
-    /// </summary>
-    /// <param name="net">The trained neural network model.</param>
-    /// <param name="samples">The evaluation samples.</param>
-    /// <returns>A comprehensive <see cref="EvaluationReport"/>.</returns>
-    /// <exception cref="ArgumentException">Thrown when the sample list is empty.</exception>
+    // Performs model inference over all samples, computing accuracy, confusion matrix, precision, recall, and F1 scores.
+    // net: The trained neural network model.
+    // samples: The evaluation samples.
+    // Returns: A comprehensive EvaluationReport.
+    // Throws ArgumentException: Thrown when the sample list is empty.
     public EvaluationReport Evaluate(NeuralNet net, IReadOnlyList<Sample> samples)
     {
         ArgumentNullException.ThrowIfNull(net);
