@@ -96,14 +96,3 @@ Raw File (optdigits.tra)
    - The test set is evaluated solely at final reporting time.
 
 ---
-
-## 6. Citation
-```bibtex
-@misc{optdigits_80,
-  author       = {Alpaydin, E. and Kaynak, C.},
-  title        = {{Optical Recognition of Handwritten Digits}},
-  year         = {1998},
-  howpublished = {UCI Machine Learning Repository},
-  note         = {{DOI}: https://doi.org/10.24432/C50P49}
-}
-```
