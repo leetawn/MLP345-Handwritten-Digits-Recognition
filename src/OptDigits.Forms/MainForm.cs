@@ -14,6 +14,22 @@ namespace OptDigits.Forms;
 /// </summary>
 public sealed class MainForm : Form
 {
+    // ── Layout constants (all pixel values verified) ──────────────────────────
+    //
+    //  Form ClientSize: 780 × 480
+    //
+    //  LEFT GroupBox  (10, 8) 308 × 460
+    //    Canvas        (10, 22) 280 × 280   bottom=302
+    //    Clear btn     (10, 310) 280 × 30   bottom=340
+    //    "8×8:" lbl    (10, 356)             bottom≈372
+    //    Preview box   (88, 350) 80 × 80    bottom=430   ← kept square
+    //
+    //  RIGHT GroupBox (328, 8) 440 × 460
+    //    Digit panel   (10, 22) 130 × 130   bottom=152   (60pt font)
+    //    "Activations:" (150, 22) auto
+    //    Bars [0..9]   (10, 162) each 29 × 26 (28px step)
+    //                  bar 9 bottom = 162 + 9*28 + 26 = 440  ✓
+
     private readonly Bitmap _canvasBitmap;
     private readonly Graphics _canvasGraphics;
     private readonly PictureBox _canvasBox;
@@ -22,17 +38,15 @@ public sealed class MainForm : Form
     private readonly DigitBarControl[] _digitBars = new DigitBarControl[10];
 
     private NeuralNet? _net;
-    private Point? _lastPoint = null;
-    private bool _isDrawing = false;
+    private Point? _lastPoint;
+    private bool _isDrawing;
     private readonly Pen _drawPen;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MainForm"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of <see cref="MainForm"/>.</summary>
     public MainForm()
     {
         Text = "OptDigits MLP Demo";
-        ClientSize = new Size(720, 420);
+        ClientSize = new Size(780, 480);
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
@@ -45,18 +59,18 @@ public sealed class MainForm : Form
             LineJoin = LineJoin.Round
         };
 
+        // White canvas bitmap (280 × 280)
         _canvasBitmap = new Bitmap(280, 280);
         _canvasGraphics = Graphics.FromImage(_canvasBitmap);
         _canvasGraphics.SmoothingMode = SmoothingMode.AntiAlias;
         ClearCanvasBitmap();
 
-        // ── Left panel: canvas + clear + 8x8 preview ──────────────────────────
+        // ── LEFT GroupBox ─────────────────────────────────────────────────────
         var grpDraw = new GroupBox
         {
             Text = "Draw a digit",
-            Location = new Point(12, 8),
-            Size = new Size(306, 396),
-            Font = new Font("Segoe UI", 9f)
+            Location = new Point(10, 8),
+            Size = new Size(308, 460)
         };
 
         _canvasBox = new PictureBox
@@ -77,27 +91,27 @@ public sealed class MainForm : Form
         {
             Text = "Clear",
             Location = new Point(10, 310),
-            Size = new Size(280, 30),
+            Size = new Size(280, 30)
         };
-        btnClear.Click += (s, e) => ResetCanvas();
+        btnClear.Click += (_, _) => ResetCanvas();
         grpDraw.Controls.Add(btnClear);
 
         var lblPreview = new Label
         {
-            Text = "8×8 input features:",
-            Location = new Point(10, 350),
+            Text = "8×8 input:",
+            Location = new Point(10, 362),
             AutoSize = true
         };
         grpDraw.Controls.Add(lblPreview);
 
         _preview8x8Box = new PictureBox
         {
-            Location = new Point(130, 344),
-            Size = new Size(64, 64),
+            Location = new Point(88, 350),
+            Size = new Size(80, 80),
             BorderStyle = BorderStyle.FixedSingle,
             BackColor = Color.White
         };
-        _preview8x8Box.Paint += (s, pe) =>
+        _preview8x8Box.Paint += (_, pe) =>
         {
             pe.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             pe.Graphics.PixelOffsetMode = PixelOffsetMode.Half;
@@ -108,20 +122,19 @@ public sealed class MainForm : Form
 
         Controls.Add(grpDraw);
 
-        // ── Right panel: prediction digit + activation bars ────────────────────
+        // ── RIGHT GroupBox ────────────────────────────────────────────────────
         var grpResult = new GroupBox
         {
             Text = "Prediction",
             Location = new Point(328, 8),
-            Size = new Size(380, 396),
-            Font = new Font("Segoe UI", 9f)
+            Size = new Size(440, 460)
         };
 
-        // Large predicted digit display — fixed-size panel so it never clips
+        // Digit panel: fixed 130×130, digit label fills it
         var digitPanel = new Panel
         {
-            Location = new Point(8, 20),
-            Size = new Size(100, 100),
+            Location = new Point(10, 22),
+            Size = new Size(130, 130),
             BackColor = SystemColors.Control
         };
         grpResult.Controls.Add(digitPanel);
@@ -129,30 +142,29 @@ public sealed class MainForm : Form
         _predictedDigitLabel = new Label
         {
             Text = "—",
-            Font = new Font("Segoe UI", 72f, FontStyle.Bold),
-            ForeColor = SystemColors.ControlText,
+            Font = new Font("Segoe UI", 60f, FontStyle.Bold),
             TextAlign = ContentAlignment.MiddleCenter,
             Dock = DockStyle.Fill,
             AutoSize = false
         };
         digitPanel.Controls.Add(_predictedDigitLabel);
 
-        var lblBarsHeader = new Label
+        var lblActivations = new Label
         {
             Text = "Class activations:",
-            Location = new Point(116, 22),
+            Location = new Point(150, 28),
             AutoSize = true
         };
-        grpResult.Controls.Add(lblBarsHeader);
+        grpResult.Controls.Add(lblActivations);
 
-        // 10 activation bars stacked on the right side
-        int barY = 40;
+        // 10 bars: starting at y=162, each 26px tall, 28px step
+        // bar 9 bottom = 162 + 9*28 + 26 = 440 — fits inside GroupBox(h=460)
         for (int i = 0; i < 10; i++)
         {
             var bar = new DigitBarControl(i)
             {
-                Location = new Point(8, barY + i * 34),
-                Size = new Size(360, 30)
+                Location = new Point(10, 162 + i * 28),
+                Size = new Size(418, 26)
             };
             _digitBars[i] = bar;
             grpResult.Controls.Add(bar);
@@ -162,6 +174,8 @@ public sealed class MainForm : Form
 
         LoadModel();
     }
+
+    // ── Canvas helpers ────────────────────────────────────────────────────────
 
     private void ClearCanvasBitmap()
     {
@@ -180,6 +194,8 @@ public sealed class MainForm : Form
             _digitBars[i].UpdateActivation(0.0, isWinner: false);
     }
 
+    // ── Mouse drawing ─────────────────────────────────────────────────────────
+
     private void Canvas_MouseDown(object? sender, MouseEventArgs e)
     {
         if (e.Button != MouseButtons.Left) return;
@@ -187,7 +203,7 @@ public sealed class MainForm : Form
         _lastPoint = e.Location;
         _canvasGraphics.FillEllipse(Brushes.Black, e.X - 9, e.Y - 9, 18, 18);
         _canvasBox.Invalidate();
-        RunRealTimeInference();
+        RunInference();
     }
 
     private void Canvas_MouseMove(object? sender, MouseEventArgs e)
@@ -196,7 +212,7 @@ public sealed class MainForm : Form
         _canvasGraphics.DrawLine(_drawPen, _lastPoint.Value, e.Location);
         _lastPoint = e.Location;
         _canvasBox.Invalidate();
-        RunRealTimeInference();
+        RunInference();
     }
 
     private void Canvas_MouseUp(object? sender, MouseEventArgs e)
@@ -204,10 +220,12 @@ public sealed class MainForm : Form
         if (e.Button != MouseButtons.Left) return;
         _isDrawing = false;
         _lastPoint = null;
-        RunRealTimeInference();
+        RunInference();
     }
 
-    private void RunRealTimeInference()
+    // ── Inference ─────────────────────────────────────────────────────────────
+
+    private void RunInference()
     {
         if (_net == null) return;
 
@@ -222,49 +240,44 @@ public sealed class MainForm : Form
             return;
         }
 
-        for (int i = 0; i < 64; i++)
-            _net.setInputs(i, features[i]);
+        for (int i = 0; i < 64; i++) _net.setInputs(i, features[i]);
         _net.run();
 
         double[] activations = new double[10];
-        for (int k = 0; k < 10; k++)
-            activations[k] = _net.getOuputData(k);
+        for (int k = 0; k < 10; k++) activations[k] = _net.getOuputData(k);
 
         int predicted = _net.Predict();
         _predictedDigitLabel.Text = predicted.ToString();
-
         for (int k = 0; k < 10; k++)
             _digitBars[k].UpdateActivation(activations[k], isWinner: k == predicted);
     }
 
+    // ── Model loading ─────────────────────────────────────────────────────────
+
     private void LoadModel()
     {
-        string weightsPath = ProjectPaths.WeightsFile;
         var config = new AppConfig();
         _net = new NeuralNet(config.InputSize, config.HiddenSize, config.ClassCount);
 
-        if (File.Exists(weightsPath))
-        {
-            try { _net.loadWeights(weightsPath); }
-            catch
-            {
-                MessageBox.Show(
-                    "weights.txt found but could not be loaded.\nRun 'dotnet run --project src/OptDigits.App -- train' first.",
-                    "Model Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-        else
+        if (!File.Exists(ProjectPaths.WeightsFile))
         {
             MessageBox.Show(
-                "No trained model found.\nRun 'dotnet run --project src/OptDigits.App -- train' to generate weights.txt first.",
+                "No trained model found (weights.txt).\n\n" +
+                "Run the following first:\n" +
+                "  dotnet run --project src/OptDigits.App -- train",
                 "Model Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        try { _net.loadWeights(ProjectPaths.WeightsFile); }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to load weights:\n{ex.Message}",
+                "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
-    /// <summary>
-    /// Releases unmanaged and managed resources.
-    /// </summary>
-    /// <param name="disposing">True to release both managed and unmanaged resources.</param>
+    /// <summary>Releases managed resources.</summary>
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -277,30 +290,28 @@ public sealed class MainForm : Form
     }
 }
 
+// ── DigitBarControl ───────────────────────────────────────────────────────────
+
 /// <summary>
-/// Custom bar control representing activation probability for a single digit class.
+/// Lightweight owner-drawn progress bar showing raw MLP activation for one digit class.
 /// </summary>
 public sealed class DigitBarControl : UserControl
 {
     private readonly int _digit;
-    private double _activation = 0.0;
-    private bool _isWinner = false;
+    private double _activation;
+    private bool _isWinner;
+    private static readonly Font _normalFont = new("Segoe UI", 8.5f);
+    private static readonly Font _boldFont   = new("Segoe UI", 8.5f, FontStyle.Bold);
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DigitBarControl"/> class for the specified digit class.
-    /// </summary>
-    /// <param name="digit">Target digit class index (0–9).</param>
+    /// <summary>Initializes a new <see cref="DigitBarControl"/> for digit class <paramref name="digit"/>.</summary>
     public DigitBarControl(int digit)
     {
         _digit = digit;
         DoubleBuffered = true;
+        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
     }
 
-    /// <summary>
-    /// Updates the bar activation value and winning highlight state, then repaints.
-    /// </summary>
-    /// <param name="activation">Normalized activation level [0.0, 1.0].</param>
-    /// <param name="isWinner">Whether this digit is the current top prediction.</param>
+    /// <summary>Sets the activation level and repaints.</summary>
     public void UpdateActivation(double activation, bool isWinner)
     {
         _activation = Math.Clamp(activation, 0.0, 1.0);
@@ -308,43 +319,47 @@ public sealed class DigitBarControl : UserControl
         Invalidate();
     }
 
-    /// <summary>
-    /// Paints the digit label, track background, and activation fill bar.
-    /// </summary>
-    /// <param name="e">Paint event data.</param>
+    /// <summary>Paints label, track, fill, and percentage.</summary>
     protected override void OnPaint(PaintEventArgs e)
     {
-        base.OnPaint(e);
         var g = e.Graphics;
+        g.Clear(SystemColors.Control);
 
-        // Digit label (e.g. "3:")
-        string label = $"{_digit}:";
-        using var labelFont = new Font("Segoe UI", 9f, _isWinner ? FontStyle.Bold : FontStyle.Regular);
-        g.DrawString(label, labelFont, SystemBrushes.ControlText, 2, 7);
+        Font font = _isWinner ? _boldFont : _normalFont;
 
-        // Track background
-        int barLeft = 26;
-        int barRight = Width - 50;
-        int barWidth = barRight - barLeft;
-        int barTop = 8;
-        int barHeight = Height - 16;
+        // "Digit X:" label — fixed 40px wide
+        string label = $"Digit {_digit}:";
+        g.DrawString(label, font, SystemBrushes.ControlText, new RectangleF(0, 2, 56, Height));
+
+        // Track region
+        const int labelW = 58;
+        const int pctW   = 44;
+        int trackX = labelW;
+        int trackW = Width - labelW - pctW - 2;
+        int trackY = (Height - 12) / 2;
 
         using var trackBrush = new SolidBrush(SystemColors.ControlDark);
-        g.FillRectangle(trackBrush, barLeft, barTop, barWidth, barHeight);
+        g.FillRectangle(trackBrush, trackX, trackY, trackW, 12);
 
         // Fill
-        int fillWidth = (int)(barWidth * _activation);
-        if (fillWidth > 0)
+        int fillW = (int)(trackW * _activation);
+        if (fillW > 0)
         {
-            Color fillColor = _isWinner ? Color.SteelBlue : Color.FromArgb(160, 195, 220);
-            using var fillBrush = new SolidBrush(fillColor);
-            g.FillRectangle(fillBrush, barLeft, barTop, fillWidth, barHeight);
+            using var fillBrush = new SolidBrush(_isWinner ? Color.SteelBlue : Color.LightSteelBlue);
+            g.FillRectangle(fillBrush, trackX, trackY, fillW, 12);
         }
 
         // Percentage label
         string pct = $"{_activation * 100:F1}%";
-        using var pctFont = new Font("Segoe UI", 8f, _isWinner ? FontStyle.Bold : FontStyle.Regular);
-        var pctSize = g.MeasureString(pct, pctFont);
-        g.DrawString(pct, pctFont, SystemBrushes.ControlText, Width - pctSize.Width - 2, (Height - pctSize.Height) / 2);
+        g.DrawString(pct, font, SystemBrushes.ControlText,
+            new RectangleF(Width - pctW, 2, pctW, Height),
+            new StringFormat { Alignment = StringAlignment.Far });
+    }
+
+    /// <inheritdoc/>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing) { _normalFont.Dispose(); _boldFont.Dispose(); }
+        base.Dispose(disposing);
     }
 }
