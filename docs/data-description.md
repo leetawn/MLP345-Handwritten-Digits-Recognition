@@ -41,7 +41,7 @@ This document provides dataset characteristics, provenance, statistical properti
 
 ---
 
-## 4. Class Distribution Summary
+## 4. Observed Class Distribution Summary
 
 | Class (Digit) | Training Samples (`optdigits.tra`) | Test Samples (`optdigits.tes`) | Total Samples |
 | :---: | :---: | :---: | :---: |
@@ -54,7 +54,7 @@ This document provides dataset characteristics, provenance, statistical properti
 | **6** | 377 | 181 | 558 |
 | **7** | 387 | 179 | 566 |
 | **8** | 380 | 174 | 554 |
-| **9** | 378 | 180 | 558 |
+| **9** | 382 | 180 | 562 |
 | **Total** | **3,823** | **1,797** | **5,620** |
 
 *Observation*: The class distribution is balanced across both splits, with roughly $10\%$ representation per digit class.
