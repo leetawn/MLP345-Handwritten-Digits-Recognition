@@ -10,7 +10,6 @@ namespace Backprop
         private double hactivation;
         private double bias;
         private double error;
-        static System.Random rand;
         public HNeuron()
         {
             idno=0;
@@ -117,18 +116,7 @@ namespace Backprop
             double x=(double)y.Next(-10,10);
             Console.WriteLine("at hidden {0} = {1}", this.idno,x);
             return x;*/
-            if(rand == null)
-            {
-                rand = new System.Random();
-            }
-                
-            int MaxLimit = + 1000; 
-                
-            int MinLimit = - 1000; 
-
-            double number = (double) (rand.Next(MinLimit,MaxLimit))/2000;
-                
-            return number; 
+            return Rng.NextWeight();
         }
     }//end of class HNeuron
 

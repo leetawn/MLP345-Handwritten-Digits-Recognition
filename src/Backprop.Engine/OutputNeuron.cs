@@ -7,7 +7,6 @@ namespace Backprop
         private double bias;
         private int idno;
         private double OActivation;
-        static System.Random rand;
         public ONeuron()
         {
             bias=this.randomBias();
@@ -51,7 +50,7 @@ namespace Backprop
         }
         private double randomBias()
         {
-        /*    int num;
+        /*	int num;
             
             DateTime x=DateTime.Now;
             Random rnd=new Random((int)x.Millisecond);
@@ -61,19 +60,7 @@ namespace Backprop
             double x=(double)y.Next(-10,10);
             Console.WriteLine("at hidden {0} = {1}", this.idno,x);
             return x;*/
-            if(rand == null)
-            {
-                rand = new System.Random();
-            }
-                
-            int MaxLimit = + 1000; 
-                
-            int MinLimit = - 1000; 
-
-            double number = (double) (rand.Next(MinLimit,MaxLimit))/2000;
-                
-            return number; 
-            
+            return Rng.NextWeight();
         }
     }//end of class ONeuron
 

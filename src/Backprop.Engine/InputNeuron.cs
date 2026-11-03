@@ -9,7 +9,6 @@ namespace Backprop
         private double [] weights; // 64 2 neurons to be connected
         private int wsize;
         private int num;
-        static System.Random rand;
         public INeuron()
         {
             idno=0;
@@ -38,18 +37,7 @@ namespace Backprop
             Console.WriteLine("at hidden {0} = {1}", this.idno,x);
             return x;*/
             
-            if(rand == null)
-            {
-                rand = new System.Random();
-            }
-                
-            int MaxLimit = + 1000; 
-                
-            int MinLimit = - 1000; 
-
-            double number = (double) (rand.Next(MinLimit,MaxLimit))/2000;
-                
-            return number; 
+            return Rng.NextWeight();
         }
         public void setRandomWeights(int size)
         {
