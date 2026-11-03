@@ -318,13 +318,15 @@ public sealed class DigitBarControl : UserControl
     private readonly int _digit;
     private double _activation;
     private bool _isWinner;
-    private static readonly Font _normalFont = new("Segoe UI", 8.5f);
-    private static readonly Font _boldFont   = new("Segoe UI", 8.5f, FontStyle.Bold);
+    private readonly Font _normalFont;
+    private readonly Font _boldFont;
 
     /// <summary>Initializes a new <see cref="DigitBarControl"/> for digit class <paramref name="digit"/>.</summary>
     public DigitBarControl(int digit)
     {
         _digit = digit;
+        _normalFont = new Font("Segoe UI", 8.5f);
+        _boldFont = new Font("Segoe UI", 8.5f, FontStyle.Bold);
         DoubleBuffered = true;
         SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
     }
