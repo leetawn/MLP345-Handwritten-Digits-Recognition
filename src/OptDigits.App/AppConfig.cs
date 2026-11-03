@@ -19,8 +19,8 @@ public sealed record AppConfig(
     double PixelMax = 16.0,
     int HiddenSize = 32,
     int Epochs = 50,
-    double LearningRateOut = 0.2,
-    double LearningRateIn = 0.15,
+    double LearningRateOut = 0.5,
+    double LearningRateIn = 0.375,
     int Seed = 42,
     int LogEvery = 5,
     double ValidationFraction = 0.2);
