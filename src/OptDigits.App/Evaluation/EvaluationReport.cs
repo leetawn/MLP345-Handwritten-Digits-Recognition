@@ -1,3 +1,6 @@
+using System.Globalization;
+using System.Text;
+
 namespace OptDigits.Evaluation;
 
 /// <summary>
@@ -16,16 +19,43 @@ public sealed record EvaluationReport(
     /// Formats the evaluation metrics and confusion matrix into a human-readable console string.
     /// </summary>
     /// <returns>Formatted multi-line report string.</returns>
-    /// <exception cref="NotImplementedException">Thrown because this method is a stub.</exception>
     public string ToConsoleString()
     {
-        // TODO 1: Use StringBuilder to construct a formatted text report
-        // TODO 2: Append overall Accuracy percentage: $"Overall Accuracy: {Accuracy * 100:F2}%"
-        // TODO 3: Append table header: "Class | Precision | Recall | F1-Score | Support"
-        // TODO 4: Append each row in PerClass formatted to 4 decimal places
-        // TODO 5: Append formatted confusion matrix grid with headers for actual/predicted
-        // TODO 6: Return sb.ToString()
-        throw new NotImplementedException("EvaluationReport.ToConsoleString is not implemented yet");
+        var builder = new StringBuilder();
+        builder.AppendLine($"Overall Accuracy: {(Accuracy * 100).ToString("F2", CultureInfo.InvariantCulture)}%");
+        builder.AppendLine();
+        builder.AppendLine("Per-Class Metrics");
+        builder.AppendLine($"{"Class",5} {"Precision",9} {"Recall",9} {"F1",9} {"Support",8}");
+        builder.AppendLine(new string('-', 45));
+        foreach (ClassMetrics metrics in PerClass)
+        {
+            builder.AppendLine(
+                $"{metrics.Label,5} {metrics.Precision.ToString("F4", CultureInfo.InvariantCulture),9} " +
+                $"{metrics.Recall.ToString("F4", CultureInfo.InvariantCulture),9} " +
+                $"{metrics.F1.ToString("F4", CultureInfo.InvariantCulture),9} {metrics.Support,8}");
+        }
+
+        builder.AppendLine();
+        builder.AppendLine("Confusion Matrix (actual rows, predicted columns)");
+        builder.Append("actual\\predicted");
+        for (int classIndex = 0; classIndex < ConfusionMatrix.GetLength(1); classIndex++)
+        {
+            builder.Append($"{classIndex,6}");
+        }
+
+        builder.AppendLine();
+        for (int actual = 0; actual < ConfusionMatrix.GetLength(0); actual++)
+        {
+            builder.Append($"{actual,16}");
+            for (int predicted = 0; predicted < ConfusionMatrix.GetLength(1); predicted++)
+            {
+                builder.Append($"{ConfusionMatrix[actual, predicted],6}");
+            }
+
+            builder.AppendLine();
+        }
+
+        return builder.ToString();
     }
 
     /// <summary>
@@ -33,15 +63,34 @@ public sealed record EvaluationReport(
     /// Header: actual,pred_0,pred_1,pred_2,pred_3,pred_4,pred_5,pred_6,pred_7,pred_8,pred_9
     /// </summary>
     /// <param name="path">Destination CSV file path.</param>
-    /// <exception cref="NotImplementedException">Thrown because this method is a stub.</exception>
     public void SaveConfusionMatrixCsv(string path)
     {
-        // TODO 1: Open StreamWriter at destination path
-        // TODO 2: Write header row: "actual,pred_0,pred_1,pred_2,pred_3,pred_4,pred_5,pred_6,pred_7,pred_8,pred_9"
-        // TODO 3: For each row i from 0 to 9:
-        //           a. Build comma-delimited string starting with i followed by ConfusionMatrix[i, j] for j = 0..9
-        //           b. Write line to writer
-        // TODO 4: Flush and close writer
-        throw new NotImplementedException("EvaluationReport.SaveConfusionMatrixCsv is not implemented yet");
+        ArgumentException.ThrowIfNullOrEmpty(path);
+        string? directory = Path.GetDirectoryName(Path.GetFullPath(path));
+        if (directory is not null)
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        using var writer = new StreamWriter(path, false, new UTF8Encoding(false));
+        int columnCount = ConfusionMatrix.GetLength(1);
+        writer.Write("actual\\predicted");
+        for (int predicted = 0; predicted < columnCount; predicted++)
+        {
+            writer.Write($",{predicted.ToString(CultureInfo.InvariantCulture)}");
+        }
+
+        writer.WriteLine();
+        int rowCount = ConfusionMatrix.GetLength(0);
+        for (int actual = 0; actual < rowCount; actual++)
+        {
+            writer.Write(actual.ToString(CultureInfo.InvariantCulture));
+            for (int predicted = 0; predicted < columnCount; predicted++)
+            {
+                writer.Write($",{ConfusionMatrix[actual, predicted].ToString(CultureInfo.InvariantCulture)}");
+            }
+
+            writer.WriteLine();
+        }
     }
 }
