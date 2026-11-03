@@ -43,7 +43,8 @@ public sealed class MainForm : Form
     private readonly Pen _drawPen;
 
     /// <summary>Initializes a new instance of <see cref="MainForm"/>.</summary>
-    public MainForm()
+    /// <param name="preloadedNet">An optional already-trained neural network instance. If null, loads from weights file.</param>
+    public MainForm(NeuralNet? preloadedNet = null)
     {
         Text = "OptDigits MLP Demo";
         ClientSize = new Size(780, 480);
@@ -120,6 +121,16 @@ public sealed class MainForm : Form
         };
         grpDraw.Controls.Add(_preview8x8Box);
 
+        var btnMenu = new Button
+        {
+            Text = "← Main Menu",
+            Location = new Point(176, 372),
+            Size = new Size(114, 34),
+            UseVisualStyleBackColor = true
+        };
+        btnMenu.Click += (_, _) => Close();
+        grpDraw.Controls.Add(btnMenu);
+
         Controls.Add(grpDraw);
 
         // ── RIGHT GroupBox ────────────────────────────────────────────────────
@@ -172,7 +183,14 @@ public sealed class MainForm : Form
 
         Controls.Add(grpResult);
 
-        LoadModel();
+        if (preloadedNet != null)
+        {
+            _net = preloadedNet;
+        }
+        else
+        {
+            LoadModel();
+        }
     }
 
     // ── Canvas helpers ────────────────────────────────────────────────────────
