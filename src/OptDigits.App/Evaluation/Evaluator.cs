@@ -1,4 +1,5 @@
 using Backprop;
+using OptDigits.App;
 using OptDigits.Data;
 
 namespace OptDigits.Evaluation;
@@ -15,25 +16,59 @@ public sealed class Evaluator
     /// <param name="net">The trained neural network model.</param>
     /// <param name="samples">The evaluation samples.</param>
     /// <returns>A comprehensive <see cref="EvaluationReport"/>.</returns>
-    /// <exception cref="NotImplementedException">Thrown because this method is a stub.</exception>
+    /// <exception cref="ArgumentException">Thrown when the sample list is empty.</exception>
     public EvaluationReport Evaluate(NeuralNet net, IReadOnlyList<Sample> samples)
     {
-        // TODO 1: Allocate int[10, 10] confusion matrix
-        // TODO 2: For each sample in samples:
-        //           a. Feed features to net: for (i=0; i<64; i++) net.setInputs(i, sample.Features[i]);
-        //           b. Call predicted = net.Predict();
-        //           c. Increment confusionMatrix[sample.Label, predicted]++;
-        // TODO 3: Compute overall accuracy = sum of diagonal elements / total samples
-        // TODO 4: For each digit class c from 0 to 9:
-        //           a. truePositive = confusionMatrix[c, c]
-        //           b. falsePositive = sum of column c excluding [c, c]
-        //           c. falseNegative = sum of row c excluding [c, c]
-        //           d. support = sum of row c
-        //           e. precision = TP / (TP + FP), handling division by 0
-        //           f. recall = TP / (TP + FN), handling division by 0
-        //           g. f1 = (precision + recall > 0) ? (2 * precision * recall / (precision + recall)) : 0.0
-        //           h. Add ClassMetrics(c, precision, recall, f1, support) to perClass list
-        // TODO 5: Return new EvaluationReport(accuracy, perClass, confusionMatrix)
-        throw new NotImplementedException("Evaluator.Evaluate is not implemented yet");
+        ArgumentNullException.ThrowIfNull(net);
+        ArgumentNullException.ThrowIfNull(samples);
+        if (samples.Count == 0)
+        {
+            throw new ArgumentException("At least one sample is required for evaluation.", nameof(samples));
+        }
+
+        int classCount = new AppConfig().ClassCount;
+        var confusionMatrix = new int[classCount, classCount];
+        foreach (Sample sample in samples)
+        {
+            for (int featureIndex = 0; featureIndex < sample.Features.Length; featureIndex++)
+            {
+                net.setInputs(featureIndex, sample.Features[featureIndex]);
+            }
+
+            net.run();
+            int predicted = net.Predict();
+            confusionMatrix[sample.Label, predicted]++;
+        }
+
+        var perClass = new List<ClassMetrics>(classCount);
+        int correct = 0;
+        for (int classIndex = 0; classIndex < classCount; classIndex++)
+        {
+            correct += confusionMatrix[classIndex, classIndex];
+            int truePositive = confusionMatrix[classIndex, classIndex];
+            int falsePositive = 0;
+            int falseNegative = 0;
+            for (int otherClass = 0; otherClass < classCount; otherClass++)
+            {
+                if (otherClass != classIndex)
+                {
+                    falsePositive += confusionMatrix[otherClass, classIndex];
+                    falseNegative += confusionMatrix[classIndex, otherClass];
+                }
+            }
+
+            int support = truePositive + falseNegative;
+            double precision = DivideOrZero(truePositive, truePositive + falsePositive);
+            double recall = DivideOrZero(truePositive, support);
+            double f1 = DivideOrZero(2.0 * precision * recall, precision + recall);
+            perClass.Add(new ClassMetrics(classIndex, precision, recall, f1, support));
+        }
+
+        return new EvaluationReport((double)correct / samples.Count, perClass, confusionMatrix);
+    }
+
+    private static double DivideOrZero(double numerator, double denominator)
+    {
+        return denominator == 0.0 ? 0.0 : numerator / denominator;
     }
 }
