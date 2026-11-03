@@ -65,7 +65,7 @@ public sealed class MinMaxScaler
     }
 
     /// <summary>
-    /// Transforms a single sample's features to the [0, 1] interval using the fitted or fixed min/max bounds.
+    /// Transforms a single sample's features using the fitted or fixed min/max bounds without clamping.
     /// Formula: x_scaled = (x - min) / (max - min).
     /// </summary>
     /// <param name="s">The sample to transform.</param>
