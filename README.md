@@ -171,18 +171,3 @@ Held-out test set performance (`data/raw/optdigits.tes`):
 *(Evaluated on 1,797 test instances with 32 hidden units, 50 epochs, and tuned learning rates).*
 
 ---
-
-## Team & Responsibilities
-
-| Role | Partner | Primary Modules & Deliverables |
-| :--- | :---: | :--- |
-| **Partner A** | *Student A* | Backprop Engine extensions, `Trainer`, `CsvLossLogger`, `ExperimentRunner`, parameter sweep execution, `experiments.md` write-up. |
-| **Partner B** | *Student B* | `CsvDatasetLoader`, `MinMaxScaler`, `LabelEncoder`, `DatasetSplitter`, `Evaluator`, `EvaluationReport` formatting, documentation, plotting tools, and final results write-up. |
-
----
-
-## References
-1. **UCI Dataset**:
-   Alpaydin, E. and Kaynak, C. (1998). *Optical Recognition of Handwritten Digits*. UCI Machine Learning Repository. [https://doi.org/10.24432/C50P49](https://doi.org/10.24432/C50P49).
-2. **Backpropagation**:
-   Rumelhart, D. E., Hinton, G. E., and Williams, R. J. (1986). *Learning representations by back-propagating errors*. Nature, 323(6088), 533-536.
