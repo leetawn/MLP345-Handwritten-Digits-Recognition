@@ -52,14 +52,19 @@ public static class DigitExtractor
 
         int strokeWidth = maxX - minX + 1;
         int strokeHeight = maxY - minY + 1;
-        int maxDim = Math.Max(strokeWidth, strokeHeight);
 
-        // 2. Center in a square bounding box with 20% margin
-        int padding = Math.Max(4, (int)(maxDim * 0.20));
-        int squareSize = maxDim + 2 * padding;
+        // 2. Normalization matching UCI Optdigits:
+        // In the UCI dataset, digits span vertically across rows 0 through 7 (height ~ 28-29 out of 32),
+        // while columns 0 and 7 remain empty margins (width ~ 24-26 out of 32).
+        const float targetHeight = 29.0f;
+        const float targetWidth  = 26.0f;
 
-        float offsetX = minX - (squareSize - strokeWidth) / 2.0f;
-        float offsetY = minY - (squareSize - strokeHeight) / 2.0f;
+        float scale = Math.Min(targetHeight / strokeHeight, targetWidth / strokeWidth);
+        float scaledW = Math.Max(2.0f, strokeWidth * scale);
+        float scaledH = Math.Max(2.0f, strokeHeight * scale);
+
+        float destX = (32.0f - scaledW) / 2.0f;
+        float destY = (32.0f - scaledH) / 2.0f;
 
         // 3. Render into a 32x32 bitmap (optdigits source bitmap resolution)
         using var bmp32 = new Bitmap(32, 32);
@@ -70,8 +75,8 @@ public static class DigitExtractor
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            var srcRect = new RectangleF(offsetX, offsetY, squareSize, squareSize);
-            var destRect = new Rectangle(0, 0, 32, 32);
+            var srcRect = new RectangleF(minX, minY, strokeWidth, strokeHeight);
+            var destRect = new RectangleF(destX, destY, scaledW, scaledH);
             g.DrawImage(canvas, destRect, srcRect, GraphicsUnit.Pixel);
         }
 
@@ -94,9 +99,9 @@ public static class DigitExtractor
 
                         // Ink intensity: 1.0 for black (ink), 0.0 for white (paper)
                         double ink = 1.0 - (p.R * 0.299 + p.G * 0.587 + p.B * 0.114) / 255.0;
-                        if (ink > 0.15)
+                        if (ink > 0.12)
                         {
-                            blockSum += Math.Min(1.0, ink * 1.25);
+                            blockSum += Math.Min(1.0, ink * 1.35);
                         }
                     }
                 }

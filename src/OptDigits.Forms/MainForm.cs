@@ -53,7 +53,7 @@ public sealed class MainForm : Form
         StartPosition = FormStartPosition.CenterScreen;
         Font = new Font("Segoe UI", 9f);
 
-        _drawPen = new Pen(Color.Black, 18f)
+        _drawPen = new Pen(Color.Black, 20f)
         {
             StartCap = LineCap.Round,
             EndCap = LineCap.Round,
@@ -219,7 +219,7 @@ public sealed class MainForm : Form
         if (e.Button != MouseButtons.Left) return;
         _isDrawing = true;
         _lastPoint = e.Location;
-        _canvasGraphics.FillEllipse(Brushes.Black, e.X - 9, e.Y - 9, 18, 18);
+        _canvasGraphics.FillEllipse(Brushes.Black, e.X - 10, e.Y - 10, 20, 20);
         _canvasBox.Invalidate();
         RunInference();
     }
