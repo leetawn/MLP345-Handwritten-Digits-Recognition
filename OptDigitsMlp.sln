@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backprop.Engine", "src\Back
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptDigits.App", "src\OptDigits.App\OptDigits.App.csproj", "{2D844E8F-CEAA-4CD0-8061-5158C3F57F03}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptDigits.Forms", "src\OptDigits.Forms\OptDigits.Forms.csproj", "{92CE3124-02E9-4C08-8571-28998C478A05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,18 @@ Global
 		{2D844E8F-CEAA-4CD0-8061-5158C3F57F03}.Release|x64.Build.0 = Release|Any CPU
 		{2D844E8F-CEAA-4CD0-8061-5158C3F57F03}.Release|x86.ActiveCfg = Release|Any CPU
 		{2D844E8F-CEAA-4CD0-8061-5158C3F57F03}.Release|x86.Build.0 = Release|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Debug|x64.Build.0 = Debug|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Debug|x86.Build.0 = Debug|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Release|x64.ActiveCfg = Release|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Release|x64.Build.0 = Release|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Release|x86.ActiveCfg = Release|Any CPU
+		{92CE3124-02E9-4C08-8571-28998C478A05}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,5 +64,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A4EA19DD-10C7-496A-B9EC-15CABE57EBC3} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{2D844E8F-CEAA-4CD0-8061-5158C3F57F03} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{92CE3124-02E9-4C08-8571-28998C478A05} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal
