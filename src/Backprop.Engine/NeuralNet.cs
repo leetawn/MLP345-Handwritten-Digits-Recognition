@@ -8,24 +8,19 @@ namespace Backprop
         private INeuron [] ineuron;//approximatelty 3072
         private HNeuron [] hneuron;// approx 64
         private ONeuron [] oneuron;//approx 10
-        private const double LRPOUT =0.2;//learning rate for the the ouptput layer
-        private const double LRPIN = 0.15;// learning rate for the input layer
+        private readonly double _lrOut;
+        private readonly double _lrIn;
         private double [] errorComponent; // approx 10;
         private double [] errorDerivative;
         private double [] desiredout;
 
-        public NeuralNet()
+        public NeuralNet() : this(3072, 64, 10, 0.2, 0.15)
         {
-            ineuron=new INeuron[3072];
-            hneuron=new HNeuron[64];
-            oneuron=new ONeuron[10];
-            desiredout=new double[10];
-            errorComponent=new double[10];
-            errorDerivative=new double[10];
-            createNeurons(ineuron.Length,hneuron.Length,oneuron.Length);
         }
-        public NeuralNet(int input,int hidden,int output)
+        public NeuralNet(int input,int hidden,int output, double lrOut = 0.2, double lrIn = 0.15)
         {
+            _lrOut = lrOut;
+            _lrIn = lrIn;
             ineuron=new INeuron[input];
             hneuron=new HNeuron[hidden];
             oneuron=new ONeuron[output];
@@ -122,19 +117,19 @@ namespace Backprop
             for(int x=0;x<hneuron.Length;x++)//calculates the errors of every neuron in the 2 layer
                 hneuron[x].calculateErr(errorDerivative);
             for(int x=0;x<hneuron.Length;x++)//change in the weights in the 2 to ouput
-                hneuron[x].setWeight(LRPOUT,errorDerivative);
+                hneuron[x].setWeight(_lrOut,errorDerivative);
             for(int x=0;x<ineuron.Length;x++)//change the weights in the input to 2
             {
                 for (int y=0;y<hneuron.Length;y++)
                 {
-                    ineuron[x].setWeight(y,hneuron[y].getErr(),LRPIN);
+                    ineuron[x].setWeight(y,hneuron[y].getErr(),_lrIn);
                 
                 }
             }
             for (int x=0;x<oneuron.Length;x++)//change in output neuron bias
-                oneuron[x].changeBias(LRPOUT,errorDerivative);
+                oneuron[x].changeBias(_lrOut,errorDerivative);
             for (int x=0;x<hneuron.Length;x++)//change in 2 neuron bias
-                hneuron[x].changeBias(LRPIN);
+                hneuron[x].changeBias(_lrIn);
 
         }
         public void run()
