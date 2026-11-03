@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build & Verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore OptDigitsMlp.sln
+
+      - name: Build solution
+        run: dotnet build OptDigitsMlp.sln --no-restore --configuration Release
+
+      - name: Test CLI entry point (friendly stub handling verification)
+        run: dotnet run --project src/OptDigits.App --no-build --configuration Release -- train || [ $? -eq 2 ]
