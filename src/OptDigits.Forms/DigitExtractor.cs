@@ -10,7 +10,7 @@ namespace OptDigits.Forms;
 public static class DigitExtractor
 {
     /// <summary>
-    /// Extracts 64 normalized features from a canvas bitmap.
+    /// Extracts 64 normalized features from a canvas bitmap (white background, black stroke).
     /// Returns (features, downsampledPreview, hasDrawing).
     /// </summary>
     public static (double[] Features, Bitmap Preview8x8, bool HasDrawing) ExtractFeatures(Bitmap canvas)
@@ -19,14 +19,15 @@ public static class DigitExtractor
         int maxX = int.MinValue, maxY = int.MinValue;
         int activePixelCount = 0;
 
-        // 1. Detect bounding box of drawn strokes
+        // 1. Detect bounding box of drawn strokes (dark ink on white background)
         for (int y = 0; y < canvas.Height; y++)
         {
             for (int x = 0; x < canvas.Width; x++)
             {
                 Color c = canvas.GetPixel(x, y);
-                // Background is black (0,0,0), stroke is white/bright
-                if (c.R > 40 || c.G > 40 || c.B > 40)
+                // Darkness / ink density: 0.0 for white, 1.0 for black
+                double ink = 1.0 - (c.R * 0.299 + c.G * 0.587 + c.B * 0.114) / 255.0;
+                if (ink > 0.20) // Significant stroke ink
                 {
                     activePixelCount++;
                     if (x < minX) minX = x;
@@ -44,7 +45,7 @@ public static class DigitExtractor
             var emptyBmp = new Bitmap(8, 8);
             using (var g = Graphics.FromImage(emptyBmp))
             {
-                g.Clear(Color.Black);
+                g.Clear(Color.White);
             }
             return (emptyFeatures, emptyBmp, false);
         }
@@ -54,7 +55,7 @@ public static class DigitExtractor
         int maxDim = Math.Max(strokeWidth, strokeHeight);
 
         // 2. Center in a square bounding box with 20% margin
-        int padding = (int)(maxDim * 0.20);
+        int padding = Math.Max(4, (int)(maxDim * 0.20));
         int squareSize = maxDim + 2 * padding;
 
         float offsetX = minX - (squareSize - strokeWidth) / 2.0f;
@@ -64,7 +65,7 @@ public static class DigitExtractor
         using var bmp32 = new Bitmap(32, 32);
         using (var g = Graphics.FromImage(bmp32))
         {
-            g.Clear(Color.Black);
+            g.Clear(Color.White);
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
             g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -90,11 +91,12 @@ public static class DigitExtractor
                         int ix = bx * 4 + px;
                         int iy = by * 4 + py;
                         Color p = bmp32.GetPixel(ix, iy);
-                        // Normalized intensity in [0, 1]
-                        double intensity = (p.R + p.G + p.B) / (3.0 * 255.0);
-                        if (intensity > 0.25)
+
+                        // Ink intensity: 1.0 for black (ink), 0.0 for white (paper)
+                        double ink = 1.0 - (p.R * 0.299 + p.G * 0.587 + p.B * 0.114) / 255.0;
+                        if (ink > 0.15)
                         {
-                            blockSum += Math.Min(1.0, intensity * 1.2);
+                            blockSum += Math.Min(1.0, ink * 1.25);
                         }
                     }
                 }
@@ -104,7 +106,8 @@ public static class DigitExtractor
                 double normalized = count / 16.0;
                 features[by * 8 + bx] = normalized;
 
-                int gray = (int)Math.Clamp(normalized * 255.0, 0, 255);
+                // Preview bitmap: white background (255), black ink (0)
+                int gray = 255 - (int)Math.Clamp(normalized * 255.0, 0, 255);
                 preview.SetPixel(bx, by, Color.FromArgb(gray, gray, gray));
             }
         }
@@ -112,4 +115,3 @@ public static class DigitExtractor
         return (features, preview, true);
     }
 }
-
